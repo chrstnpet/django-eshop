@@ -1,0 +1,10 @@
+/* -------------------- Font Imports -------------------- */
+@font-face {
+    font-family: 'Logo-Font';
+    src: url(./PermanentMarker-Regular.woff2);
+    font-display: swap;
+}
+
+#logo {
+    font-family: 'Logo-Font', Arial, Helvetica, sans-serif;
+}
