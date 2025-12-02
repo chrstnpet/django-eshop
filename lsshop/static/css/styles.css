@@ -1,10 +1,16 @@
 /* -------------------- Font Imports -------------------- */
 @font-face {
     font-family: 'Logo-Font';
-    src: url(./PermanentMarker-Regular.woff2);
+    src: url("PermanentMarker-Regular.woff2") format("woff2");
     font-display: swap;
+}
+
+:root {
+    font-size: clamp(20px, 1vh, 30px);
 }
 
 #logo {
     font-family: 'Logo-Font', Arial, Helvetica, sans-serif;
+    font-size: clamp(16px, 5vh, 30px);
+    margin-top: 15px;
 }
