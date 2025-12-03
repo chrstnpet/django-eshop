@@ -1,4 +1,8 @@
 from django.shortcuts import render
 
 def home(request):
-    return render(request, 'home/home.html', {'home':home})
+    context = {
+        'show_secondary_header': True,
+        'home' : 'home'
+    }
+    return render(request, 'home/home.html', context)

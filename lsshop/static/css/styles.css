@@ -1,4 +1,4 @@
-/* -------------------- Font Imports -------------------- */
+/* -------------------- General -------------------- */
 @font-face {
     font-family: 'Logo-Font';
     src: url("PermanentMarker-Regular.woff2") format("woff2");
@@ -9,8 +9,43 @@
     font-size: clamp(20px, 1vh, 30px);
 }
 
+a {
+    text-decoration: none !important;
+}
+
+/*------------ Header -------------*/
 #logo {
     font-family: 'Logo-Font', Arial, Helvetica, sans-serif;
-    font-size: clamp(16px, 5vh, 30px);
+    font-size: clamp(25px, 5vh, 30px);
     margin-top: 15px;
+}
+
+.nav-section {
+    margin-top: 10px;
+}
+
+.banner {
+    width: 100%;
+}
+
+@media (max-width: 576px) {
+    main {
+        margin-top: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    #logo {
+        display: none;
+    }
+}
+
+#loginreg {
+    margin-top: 160px;
+    margin-bottom: 50px;
+}
+
+/*------------ Footer -------------*/
+.footer-contents {
+    padding: 1% 10%;
 }
