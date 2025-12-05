@@ -20,13 +20,13 @@ class Product(models.Model):
     category                = models.ForeignKey(
         Category, 
         on_delete           = models.CASCADE,
-        limit_choices_to    = {'parent_isnull': True}
+        limit_choices_to    = {'parent__isnull': True}
     )
     sub_category = models.ForeignKey(
         Category,
         on_delete           = models.SET_NULL,
         related_name        = 'subcategory',
-        limit_choices_to    = {'parent_isnull': False}, 
+        limit_choices_to    = {'parent__isnull': False}, 
         null                = True,
         blank               = True
     )
