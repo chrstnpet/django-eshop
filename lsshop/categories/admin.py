@@ -8,7 +8,7 @@ class CategoryAdmin(admin.ModelAdmin):
     ordering        = ('parent', 'category_name')
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db.field.name == 'parent':
+        if db_field.name == 'parent':
             kwargs["queryset"]  = Category.objects.filter(parent__isnull=True)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
