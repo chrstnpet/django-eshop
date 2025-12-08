@@ -19,11 +19,30 @@
         <!-- Title -->
             <title>{% block title %}{% endblock %}</title>
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
+       
+
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+        {% if messages %}
+            {% for message in messages %}
+                {% if "regsuccess" in message.tags %}
+                <script>
+                    confetti({
+                        particleCount: 200,
+                        spread: 200,
+                        origin: { y: 0.6 }
+                    });
+                </script>
+                {% endif %}
+            {% endfor %}
+        {% endif %} 
+        
         {% include "important/header.html" %}
 
-        {% block body %}
-        {% endblock %}
+        <main class="flex-grow-1">
+            {% block body %}
+            {% endblock %}
+        </main>
         
         {% include "important/footer.html" %}
     </body>

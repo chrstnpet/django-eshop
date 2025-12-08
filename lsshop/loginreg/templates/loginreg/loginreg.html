@@ -4,59 +4,76 @@
 {% block title %}Login/Register{% endblock %}
 
 {% block body %}
-    <main>
-        <div class="container-fluid" id="loginreg">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-10 col-lg-8">
-                    <div class="card shadow-lg">
-                        <div class="row g-0 flex-wrap">
-                            
-                            <!-- Login Form -->
-                            <div class="col-12 col-md-6 border-end p-5">
-                                <h4 class="mb-4 text-center">Login</h4>
-                                <form method="POST"">
-                                    {% csrf_token %}
-                                    <div class="mb-3">
-                                        <label for="loginUsername" class="form-label">Username</label>
-                                        <input type="text" class="form-control" id="loginUsername" name="username" placeholder="Enter username" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="loginPassword" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Enter password" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                                </form>
-                            </div>
+    <div class="container-fluid" id="loginreg">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-8">
+                <div class="card shadow-lg">
+                    <div class="row g-0 flex-wrap">
 
-                            <!-- Registration Form -->
-                            <div class="col-12 col-md-6 p-5">
-                                <h4 class="mb-4 text-center">Register</h4>
-                                <form method="POST">
-                                    {% csrf_token %}
-                                    <div class="mb-3">
-                                        <label for="regUsername" class="form-label">Username</label>
-                                        <input type="text" class="form-control" id="regUsername" name="username" placeholder="Enter username" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="regEmail" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="regEmail" name="email" placeholder="Enter email" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="regPassword" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="regPassword" name="password" placeholder="Enter password" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="regConfirmPassword" class="form-label">Confirm Password</label>
-                                        <input type="password" class="form-control" id="regConfirmPassword" name="confirm_password" placeholder="Confirm password" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-success w-100">Register</button>
-                                </form>
-                            </div>
+                        <!-- Login Form -->
+                        <div class="col-12 col-md-6 border-end p-5">
+                            <h4 class="mb-4 text-center">Login</h4>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="loginUsername" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="loginUsername" name="username" placeholder="Enter username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="loginPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Enter password" required>
+                                </div>
 
-                        </div> <!-- row inside card -->
-                    </div> <!-- card -->
-                </div> <!-- col -->
-            </div> <!-- row justify-content-center -->
-        </div> <!-- container -->
-    </main>
+                                <!-- messages -->
+                                {% for message in messages %}
+                                    {% if "login" in message.tags %}
+                                        <div class="alert alert-{{ message.level_tag }} text-center">
+                                            {{ message }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                                <button type="submit" name="login_submit" class="btn btn-primary w-100">Login</button>
+                            </form>
+                        </div>
+
+                        <!-- Registration Form -->
+                        <div class="col-12 col-md-6 p-5">
+                            <h4 class="mb-4 text-center">Register</h4>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="regUsername" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="regUsername" name="username" placeholder="Enter username" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regEmail" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="regEmail" name="email" placeholder="Enter email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="regPassword" name="password" placeholder="Enter password" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="regConfirmPassword" class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-control" id="regConfirmPassword" name="confirm_password" placeholder="Confirm password" required>
+                                </div>
+
+                                <!-- messages -->
+                                {% for message in messages %}
+                                    {% if "registration" in message.tags %}
+                                        <div class="alert alert-{{ message.level_tag }} text-center">
+                                            {{ message }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                                <button type="submit" name="register_submit" class="btn btn-success w-100">Register</button>
+                            </form>
+                        </div>
+
+                    </div> <!-- row inside card -->
+                </div> <!-- card -->
+            </div> <!-- col -->
+        </div> <!-- row justify-content-center -->
+    </div> <!-- container -->
 {% endblock %}
