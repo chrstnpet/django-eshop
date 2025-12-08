@@ -7,9 +7,9 @@ from django.core.cache import cache
 
 
 def get_client_ip(request):
-    x_forwaded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwaded_for:
-        ip = x_forwaded_for.split(',')[0].strip()
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0].strip()
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
@@ -21,8 +21,9 @@ BLOCK_TIME_REGISTER     = 9000
 
 def loginreg(request):
     if request.method == "POST" and 'login_submit' in request.POST:
-        login_ip = get_client_ip(request)
-        attempts_login = cache.get(login_ip, 0)
+        login_ip        = get_client_ip(request)
+        login_key       = f"login_attempts_{login_ip}"
+        attempts_login  = cache.get(login_key, 0)
 
         if request.user.is_authenticated:
             messages.info(request, "You are already logged in. Please logout first to login with another account.", extra_tags="loginfail")
@@ -32,17 +33,17 @@ def loginreg(request):
             messages.error(request, "Too many login attempts. Please try again later.", extra_tags="loginfail")
             return redirect('loginreg:loginreg')
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
+        username    = request.POST.get('username')
+        password    = request.POST.get('password')
+        user        = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
-            cache.delete(login_ip) 
+            cache.delete(login_key) 
             return redirect('home:home')
         else:
             attempts_login += 1
-            cache.set(login_ip, attempts_login, BLOCK_TIME_LOGIN)
+            cache.set(login_key, attempts_login, BLOCK_TIME_LOGIN)
             if attempts_login < MAX_ATTEMPTS_LOGIN:
                 messages.error(request, "Invalid username or password", extra_tags="loginfail")
             else:
@@ -53,7 +54,8 @@ def loginreg(request):
     # Register
     elif 'register_submit' in request.POST:
         register_ip         = get_client_ip(request)
-        attempts_register   = cache.get(register_ip, 0)
+        register_key        = f"register_attempts_{register_ip}"
+        attempts_register   = cache.get(register_key, 0)
 
         if request.user.is_authenticated:
             messages.info(request, "You can't register a new user while you're logged in. Please log out first.", extra_tags="registrationfail")
@@ -88,7 +90,7 @@ def loginreg(request):
                 extra_tags="regsuccess"
             )
             attempts_register +=1
-            cache.set(register_ip, attempts_register, BLOCK_TIME_REGISTER)
+            cache.set(register_key, attempts_register, BLOCK_TIME_REGISTER)
             return redirect('home:home')
 
     return render(request, 'loginreg/loginreg.html', {'loginreg': loginreg})
@@ -108,10 +110,11 @@ def account(request):
     user = request.user
     open_section = None
 
-    account_info_ip         = get_client_ip(request)
-    password_ip             = get_client_ip(request)
-    attempts_change_info    = cache.get(account_info_ip, 0)
-    attempts_change_pass    = cache.get(password_ip, 0)
+    account_ip              = get_client_ip(request)
+    info_key                = f"change_info_{account_ip}"
+    pass_key                = f"change_pass_{account_ip}"
+    attempts_change_info    = cache.get(info_key, 0)
+    attempts_change_pass    = cache.get(pass_key, 0)
 
     if request.method == "POST":
 
@@ -128,7 +131,7 @@ def account(request):
                 messages.error(request, "Email already registered", extra_tags="changeerror")
             else:
                 attempts_change_info +=1
-                cache.set(account_info_ip, attempts_change_info, BLOCK_TIME_CHANGE)
+                cache.set(info_key, attempts_change_info, BLOCK_TIME_CHANGE)
                 if attempts_change_info <= MAX_ATTEMPTS_INFO_CHANGE:
                     messages.success(request, "Account updated successfully!", extra_tags="changesuccess")
                     user.username = username
@@ -152,7 +155,7 @@ def account(request):
                 messages.error(request, "Password cannot be empty", extra_tags="changeerror")
             else:
                 attempts_change_pass +=1 
-                cache.set(attempts_change_pass, attempts_change_pass, BLOCK_TIME_CHANGE)
+                cache.set(pass_key, attempts_change_pass, BLOCK_TIME_CHANGE)
                 if attempts_change_pass <= MAX_ATTEMPTS_PASSWORD_CHANGE:
                     user.set_password(password)
                     user.save()
