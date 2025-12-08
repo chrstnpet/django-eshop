@@ -23,7 +23,7 @@
                  class="accordion-collapse collapse {% if open_section == 'accountDetails' %}show{% endif %}"
                  data-bs-parent="#accountAccordion">
                 <div class="accordion-body">
-                    
+
                     {% if messages %}
                         {% for message in messages %}
                             <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
@@ -68,6 +68,13 @@
                     Password Reset
                 </button>
             </h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
             <div id="changePassword"
                  class="accordion-collapse collapse {% if open_section == 'changePassword' %}show{% endif %}"
                  data-bs-parent="#accountAccordion">

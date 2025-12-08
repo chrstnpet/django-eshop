@@ -14,19 +14,21 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-MAX_ATTEMPTS = 5
-BLOCK_TIME = 300
+MAX_ATTEMPTS_LOGIN      = 5
+MAX_ATTEMPTS_REGISTER   = 3 
+BLOCK_TIME_LOGIN        = 300
+BLOCK_TIME_REGISTER     = 9000
 
 def loginreg(request):
     if request.method == "POST" and 'login_submit' in request.POST:
-        ip = get_client_ip(request)
-        attempts = cache.get(ip, 0)
+        login_ip = get_client_ip(request)
+        attempts_login = cache.get(login_ip, 0)
 
         if request.user.is_authenticated:
             messages.info(request, "You are already logged in. Please logout first to login with another account.", extra_tags="loginfail")
             return redirect('loginreg:loginreg')
 
-        if attempts >= MAX_ATTEMPTS:
+        if attempts_login >= MAX_ATTEMPTS_LOGIN:
             messages.error(request, "Too many login attempts. Please try again later.", extra_tags="loginfail")
             return redirect('loginreg:loginreg')
 
@@ -36,12 +38,12 @@ def loginreg(request):
 
         if user is not None:
             login(request, user)
-            cache.delete(ip)  # Reset attempts after successful login
+            cache.delete(login_ip) 
             return redirect('home:home')
         else:
-            attempts += 1
-            cache.set(ip, attempts, BLOCK_TIME)
-            if attempts < MAX_ATTEMPTS:
+            attempts_login += 1
+            cache.set(login_ip, attempts_login, BLOCK_TIME_LOGIN)
+            if attempts_login < MAX_ATTEMPTS_LOGIN:
                 messages.error(request, "Invalid username or password", extra_tags="loginfail")
             else:
                 messages.error(request, "Too many login attempts. Please try again later.", extra_tags="loginfail")
@@ -50,32 +52,44 @@ def loginreg(request):
 
     # Register
     elif 'register_submit' in request.POST:
+        register_ip         = get_client_ip(request)
+        attempts_register   = cache.get(register_ip, 0)
+
+        if request.user.is_authenticated:
+            messages.info(request, "You can't register a new user while you're logged in. Please log out first.", extra_tags="registrationfail")
+            return redirect('loginreg:loginreg')
+        
+        if attempts_register >= MAX_ATTEMPTS_REGISTER:
+            messages.error(request, "Too many registration attempts. Please try again later.", extra_tags="registrationfail")
+            return redirect('loginreg:loginreg')
+
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
-        if password != confirm_password: 
+        if password != confirm_password:
             messages.error(request, "Passwords do not match", extra_tags="registration")
         elif User.objects.filter(username=username).exists():
             messages.error(request, "Username already taken", extra_tags="registration")
         elif User.objects.filter(email=email).exists():
             messages.error(request, "Email already registered", extra_tags="registration")
         else:
-            # Create user and log them in immediately
             user = User.objects.create_user(
                 username=username,
                 email=email,
                 password=password
             )
             user.save()
-            login(request, user)  # Auto-login after registration
+            login(request, user)
             messages.success(
                 request, 
                 "Account created successfully! Have fun shopping! 🎉", 
                 extra_tags="regsuccess"
             )
-            return redirect('home:home')  # Redirect to home after successful registration
+            attempts_register +=1
+            cache.set(register_ip, attempts_register, BLOCK_TIME_REGISTER)
+            return redirect('home:home')
 
     return render(request, 'loginreg/loginreg.html', {'loginreg': loginreg})
 
@@ -85,10 +99,19 @@ def logout_view(request):
     logout(request)
     return redirect('loginreg:loginreg')
 
+MAX_ATTEMPTS_INFO_CHANGE        = 2
+MAX_ATTEMPTS_PASSWORD_CHANGE    = 1
+BLOCK_TIME_CHANGE               = 86400
+
 @login_required
 def account(request):
     user = request.user
-    open_section = None  # Default: both collapsed
+    open_section = None
+
+    account_info_ip         = get_client_ip(request)
+    password_ip             = get_client_ip(request)
+    attempts_change_info    = cache.get(account_info_ip, 0)
+    attempts_change_pass    = cache.get(password_ip, 0)
 
     if request.method == "POST":
 
@@ -104,12 +127,17 @@ def account(request):
             elif User.objects.exclude(pk=user.pk).filter(email=email).exists():
                 messages.error(request, "Email already registered", extra_tags="changeerror")
             else:
-                user.username = username
-                user.email = email
-                user.first_name = first_name
-                user.last_name = last_name
-                user.save()
-                messages.success(request, "Account updated successfully!", extra_tags="changesuccess")
+                attempts_change_info +=1
+                cache.set(account_info_ip, attempts_change_info, BLOCK_TIME_CHANGE)
+                if attempts_change_info <= MAX_ATTEMPTS_INFO_CHANGE:
+                    messages.success(request, "Account updated successfully!", extra_tags="changesuccess")
+                    user.username = username
+                    user.email = email
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.save()
+                else:
+                    messages.info(request, "You can only change your information twice per day. Please revisit tomorrow.", extra_tags="changefail")
 
             open_section = 'accountDetails'  # Keep Account Info open
 
@@ -123,10 +151,15 @@ def account(request):
             elif not password:
                 messages.error(request, "Password cannot be empty", extra_tags="changeerror")
             else:
-                user.set_password(password)
-                user.save()
-                messages.success(request, "Password updated successfully!", extra_tags="changesuccess")
-                update_session_auth_hash(request, user)
+                attempts_change_pass +=1 
+                cache.set(attempts_change_pass, attempts_change_pass, BLOCK_TIME_CHANGE)
+                if attempts_change_pass <= MAX_ATTEMPTS_PASSWORD_CHANGE:
+                    user.set_password(password)
+                    user.save()
+                    messages.success(request, "Password updated successfully!", extra_tags="changesuccess")
+                    update_session_auth_hash(request, user)
+                else:
+                    messages.info(request, "You can only change your password once per day. Please revisit tomorrow.", extra_tags="changefail")
 
             open_section = 'changePassword'
 
