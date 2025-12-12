@@ -1,10 +1,17 @@
 from django.shortcuts import render
-from .models import Product
+from .models import Product, ProductSizeVariant, ProductColorVariant, Size, Color
 
 def products(request):
-    # products = Product.object.all() 
+    products = Product.objects.prefetch_related(
+        'colors__sizes'
+    ).all()
+    
+    sizes = Size.objects.all()
+    categories = Product.objects.values_list('category', flat=True).distinct()
+
     context = {
-        'show_secondary_header': True,
-        'products' : 'products'
+        'products': products,
+        'sizes': sizes,
+        'categories': categories,
     }
     return render(request, 'products/store.html', context)

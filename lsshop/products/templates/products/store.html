@@ -14,7 +14,7 @@
         <section class="section-content padding-y">
             <div class="container">
                 <div class="row">
-                    <aside class="col-md-3">
+                    <aside class="col-lg-3 col-12 mb-4">
                         <div class="card">
                             <article class="filter-group">
                                 <header class="card-header">
@@ -187,7 +187,7 @@
 
                     </aside> <!-- col.// -->
                     
-                    <main class="col-md-9">
+                    <main class="col-lg-9 col-12">
                         <header class="border-bottom mb-4 pb-3">
                             <div class="form-inline">
                                 <span class="mr-md-auto">Results</span>
@@ -195,30 +195,29 @@
                         </header>
 
                         <div class="row">
-                            <div class="col-md-4">
-                                <figure class="card card-product-grid">
-                                    <div class="img-wrap"> 
-                                        
-                                        <img src="#">
-                                        
-                                    </div> <!-- img-wrap.// -->
-                                    <figcaption class="info-wrap">
-                                        <div class="fix-height">
-                                            <a href="#" class="title">
-                                                <!--Add product name-->
-                                            </a>
-                                            <div class="price-wrap mt-2">
-                                                <!-- Include price here-->
-                                            </div> <!-- price-wrap.// -->
-                                        </div>
-                                        <a href="#" class="btn btn-block btn-primary">
-                                            Add to cart
-                                            <!--Option to put to cart -->
-                                        </a>
-                                    </figcaption>
-                                </figure>
-                            </div> <!-- col.// -->
-                        </div> <!-- row end.// -->
+                            {% for product in products %}
+                                {% for color_variant in product.colors.all %}
+                                    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                                        <figure class="card card-product-grid align-items-center h-100">
+                                            <div class="img-wrap text-center">
+                                                <img src="{{ color_variant.front_image.url }}" alt="{{ product.product_name }}" class="img-fluid" style="max-height: 250px;">
+                                            </div>
+                                            <figcaption class="info-wrap">
+                                                <div class="fix-height">
+                                                    <a href="#" class="title">{{ product.product_name }}</a>
+                                                    <div class="price-wrap mt-2">
+                                                        ${{ product.price }}
+                                                    </div>
+                                                </div>
+                                                <a href="#" class="btn btn-block btn-primary mt-2">
+                                                    Add to cart
+                                                </a>
+                                            </figcaption>
+                                        </figure>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
 
                         <nav class="mt-4" aria-label="Page navigation sample">
                         <ul class="pagination">
