@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.cache import cache
 
-
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -20,6 +19,10 @@ BLOCK_TIME_LOGIN        = 300
 BLOCK_TIME_REGISTER     = 9000
 
 def loginreg(request):
+    if request.user.is_authenticated:
+        messages.info(request, "You are already logged in.")
+        return redirect('home:home')
+
     if request.method == "POST" and 'login_submit' in request.POST:
         login_ip        = get_client_ip(request)
         login_key       = f"login_attempts_{login_ip}"
