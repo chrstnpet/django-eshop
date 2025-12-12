@@ -115,8 +115,11 @@
                     
                     <main class="col-lg-9 col-12">
                         <header class="border-bottom mb-4 pb-3">
-                            <div class="form-inline">
-                                <span class="mr-md-auto"><b>{{ product_count }}</b> items found</span>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="form-inline">
+                                    <span><b>{{ product_count }}</b> items found</span>
+                                </div>
+                                {% include 'products/pagination.html' with page_obj=products %}
                             </div>
                         </header>
 
@@ -125,33 +128,29 @@
                                 {% with first_color=product.colors.first %}
                                     {% if first_color %}
                                         <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                                            <figure class="card card-product-grid align-items-center h-100">
-                                                <div class="img-wrap text-center">
-                                                    <img src="{{ first_color.front_image.url }}" class="img-fluid" style="max-height:250px;">
-                                                </div>
-                                                <figcaption class="info-wrap">
-                                                    <div class="fix-height">
-                                                        <a href="#" class="title">{{ product.product_name }}</a>
-                                                        <div class="price-wrap mt-2">
-                                                            ${{ product.price }}
-                                                        </div>
+                                            <a href="#">
+                                                <figure class="card card-product-grid align-items-center h-100">
+                                                    <div class="img-wrap text-center">
+                                                            <img src="{{ first_color.front_image.url }}" class="img-fluid" style="max-height:250px;">
                                                     </div>
-                                                    <a href="#" class="btn btn-primary btn-block mt-2">Add to cart</a>
-                                                </figcaption>
-                                            </figure>
+                                                    <figcaption class="info-wrap">
+                                                        <div class="fix-height">
+                                                            <a href="#" class="title">{{ product.product_name }}</a>
+                                                            <div class="price-wrap mt-2">
+                                                                ${{ product.price }}
+                                                            </div>
+                                                        </div>
+                                                        <a href="#" class="btn btn-primary btn-block mt-2">Add to cart</a>
+                                                    </figcaption>
+                                                </figure>
+                                            </a>
                                         </div>
                                     {% endif %}
                                 {% endwith %}
                             {% endfor %}
                         </div>
 
-                        <nav class="mt-4" aria-label="Page navigation sample">
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                        </nav>
+                        {% include 'products/pagination.html' with page_obj=products%}
 
                     </main> <!-- col.// -->
                 </div>

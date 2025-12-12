@@ -45,12 +45,13 @@
                  <div class="col-sm-12 col-md-6 col-lg-4">
                     <div class="category-wrap dropdown d-inline-block float-right">
                         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"> 
-                            All categories
+                            Categories
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Accessories</a>
-                            <a class="dropdown-item" href="#">Apparel</a>
-                            <a class="dropdown-item" href="#">Stationary</a>
+                            <a class="dropdown-item" href="{% url 'products:products' %}">All Products</a>
+                            {% for category in links %}
+                                <a class="dropdown-item" href="{{ category.get_url }}">{{ category.category_name }}</a>
+                            {% endfor %}
                         </div>
                     </div>  <!-- category-wrap.// -->
                  </div>

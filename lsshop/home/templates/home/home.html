@@ -1,11 +1,12 @@
 {% extends 'layout.html' %}
+{% load static %}
 
 {% block title%}Home - Products{% endblock %}
 
 {% block body %}
     <main style="margin-top: 110px;">
         <div class="banner">
-            <img src="../../../static/images/banner.jpg" style="width:100%;">
+            <img src="{% static 'images/banner.jpg' %}" style="width:100%;">
         </div>
 
         <div class="container mt-4">

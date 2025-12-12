@@ -43,6 +43,9 @@ class ProductColorVariant(models.Model):
     front_image = models.ImageField(upload_to='products/', blank=True, null=True)
     back_image = models.ImageField(upload_to='products/', blank=True, null=True)
 
+    def is_available(self):
+        return self.sizes.filter(inventory__gt=0).exists()
+
     def __str__(self):
         return f"{self.product.product_name} - {self.color}"
 
@@ -58,6 +61,9 @@ class ProductSizeVariant(models.Model):
 
     size = models.ForeignKey(Size, on_delete=models.CASCADE)
     inventory = models.PositiveIntegerField(default=0)
+
+    def is_available(self):
+        return self.inventory > 0
 
     def __str__(self):
         return f"{self.color_variant} - {self.size}"
