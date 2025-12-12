@@ -6,6 +6,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_filter     = ('parent')
     search_fields   = ('category_name')
     ordering        = ('parent', 'category_name')
+    prepopulated_fields = {'slug': ('category_name',)}
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'parent':
