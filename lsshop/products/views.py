@@ -38,6 +38,10 @@ def product_detail(request, category_slug, product_slug):
 
     color_variants = single_product.colors.all()
 
+    is_product_available = color_variants.filter(
+        sizes__inventory__gt=0
+    ).exists()
+
     selected_variant_id = request.GET.get('color')
 
     if selected_variant_id:
@@ -59,7 +63,10 @@ def product_detail(request, category_slug, product_slug):
         'color_variants': color_variants,
         'selected_variant': selected_variant,
         'size_variants': size_variants,
+        'is_product_available': is_product_available,
     }
+
+    context.update(store_essentials())
 
     return render(request, 'products/product_detail.html', context)
 

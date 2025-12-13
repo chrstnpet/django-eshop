@@ -67,10 +67,16 @@
                             </div> <!-- row.// -->
                         {% endif %}
                         <hr>
-                        <a href="#" class="btn btn-primary">
-                            <span class="text me-2">Add to cart</span>
-                            <i class="bi bi-cart"></i>
-                        </a>
+                        {% if is_product_available %}
+                            <a href="#" class="btn btn-primary">
+                                <span class="text me-2">Add to cart</span>
+                                <i class="bi bi-cart"></i>
+                            </a>
+                        {% else %}
+                            <div class="alert alert-danger mt-3" role="alert">
+                                <strong>Out of stock</strong>
+                            </div>
+                        {% endif %}
                         <button class="btn btn-light btn-outline-secondary my-2" type="submit"><i class="bi bi-suit-heart"></i></button>
                     </article>
                 </main>
