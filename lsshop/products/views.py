@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product, ProductSizeVariant, ProductColorVariant, Size, Color
 from categories.models import Category
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import JsonResponse
+from django.core.paginator import Paginator
 from django.db.models import Q
 
 # Store main page
@@ -93,46 +94,47 @@ def apply_filters(request):
 
 # -------------------------------------------------------------------------------------
 # Individual product pages
+from collections import defaultdict
+
 def product_detail(request, category_slug, product_slug):
     single_product = get_object_or_404(
-        Product.objects.prefetch_related('colors__sizes__size'),
+        Product.objects.prefetch_related(
+            'colors',
+            'colors__sizes__size'
+        ),
         category__slug=category_slug,
         slug=product_slug
     )
 
     color_variants = single_product.colors.all()
 
-    is_product_available = color_variants.filter(
-        sizes__inventory__gt=0
-    ).exists()
+    # Build size map per color
+    sizes_by_color = defaultdict(list)
 
-    selected_variant_id = request.GET.get('color')
+    for color in color_variants:
+        for size in color.sizes.exclude(size__size="N/A"):
+            sizes_by_color[color.id].append({
+                "id": size.id,
+                "size": size.size.size,
+                "inventory": size.inventory,
+            })
 
-    if selected_variant_id:
-        selected_variant = color_variants.filter(id=selected_variant_id).first()
-    else:
-        selected_variant = color_variants.first()
-
-    if selected_variant:
-        size_variants = selected_variant.sizes.all().select_related('size')
-        size_variants = size_variants.exclude(size__size="N/A")
-        if not size_variants.exists():
-            size_variants = None
-    else:
-        size_variants = None
-
+    is_product_available = any(
+        size["inventory"] > 0
+        for sizes in sizes_by_color.values()
+        for size in sizes
+    )
 
     context = {
-        'single_product': single_product,
-        'color_variants': color_variants,
-        'selected_variant': selected_variant,
-        'size_variants': size_variants,
-        'is_product_available': is_product_available,
+        "single_product": single_product,
+        "color_variants": color_variants,
+        "sizes_by_color": dict(sizes_by_color),
+        "is_product_available": is_product_available,
     }
 
     context.update(store_essentials())
 
-    return render(request, 'products/product_detail.html', context)
+    return render(request, "products/product_detail.html", context)
 
 
 #-------------------------------------------------------------------------------------
@@ -194,7 +196,6 @@ def store_essentials():
         "colors": colors,
         "show_secondary_header": True,
     }
-
 
 # -------------------------------------------------------------------------------
 # Pagination

@@ -1,23 +1,38 @@
 document.addEventListener("DOMContentLoaded", function () {
     const imageElement = document.getElementById("main-product-image");
     const colors = document.querySelectorAll("input[name='color']");
+    const sizeGroups = document.querySelectorAll(".size-group");
 
+    colors.forEach(input => {
+        input.addEventListener("change", function () {
+            const colorId = this.value;
+
+            sizeGroups.forEach(group => {
+                group.classList.toggle(
+                    "d-none",
+                    group.dataset.colorId !== colorId
+                );
+            });
+        });
+    });
+
+
+    // ----------------------------
+    // Color Change
     colors.forEach(input => {
         input.addEventListener("change", function () {
             const front = this.dataset.image;
             const back = this.dataset.back;
+            const colorId = this.value;
 
+            // Update image
             if (front) {
                 imageElement.src = front;
                 imageElement.dataset.front = front;
             }
+            imageElement.dataset.back = back || "";
 
-            if (back) {
-                imageElement.dataset.back = back;
-            } else {
-                imageElement.dataset.back = ""; // no back image exists
-            }
-
+            // Active state
             document.querySelectorAll(".color-option").forEach(btn =>
                 btn.classList.remove("active")
             );
@@ -25,17 +40,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // ----------------------------
+    // Image Hover
     imageElement.addEventListener("mouseenter", function () {
-        const backImg = imageElement.dataset.back;
-        if (backImg) {
-            imageElement.src = backImg;
+        if (imageElement.dataset.back) {
+            imageElement.src = imageElement.dataset.back;
         }
     });
 
     imageElement.addEventListener("mouseleave", function () {
-        const frontImg = imageElement.dataset.front;
-        if (frontImg) {
-            imageElement.src = frontImg;
-        }
+        imageElement.src = imageElement.dataset.front;
     });
 });

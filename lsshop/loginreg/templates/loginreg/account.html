@@ -8,95 +8,64 @@
     <h2 class="mb-4">My Account</h2>
 
     <div class="accordion" id="accountAccordion">
+        {% for section in accordion_sections %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ section.id }}">
+                    <button class="accordion-button
+                        {% if open_section != section.id %}collapsed{% endif %}
+                            text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#{{ section.id }}" 
+                            aria-expanded="
+                                {% if open_section == section.id %}true
+                                {% else %}false
+                                {% endif %}"
+                            aria-controls="{{ section.id }}">
+                        {{ section.heading }}
+                    </button>
+                </h2>
 
-        <!-- Account Info -->
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingAccount">
-                <button class="accordion-button {% if open_section != 'accountDetails' %}collapsed{% endif %} text-primary fw-bold"
-                        type="button" data-bs-toggle="collapse" data-bs-target="#accountDetails"
-                        aria-expanded="{% if open_section == 'accountDetails' %}true{% else %}false{% endif %}"
-                        aria-controls="accountDetails">
-                    Account Info
-                </button>
-            </h2>
-            <div id="accountDetails"
-                 class="accordion-collapse collapse {% if open_section == 'accountDetails' %}show{% endif %}"
-                 data-bs-parent="#accountAccordion">
-                <div class="accordion-body">
+                <div id="{{ section.id }}"
+                    class="accordion-collapse collapse
+                    {% if open_section == section.id %}show{% endif %}"
+                        data-bs-parent="#accountAccordion">
+                        <div class="accordion-body">
+                            {% if section.id == "accountDetails" %}
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    {% for name, value in information %}
+                                        <div class="mb-3">
+                                            <label for="{{ name }}" class="form-label">{{ name|capfirst }}</label>
+                                            <input type="text" class="form-control" id="{{ name }}" name="{{ name }}" value="{{ value }}" required>
+                                        </div>
+                                    {% endfor %}
+                                    <button type="submit" name="{{ section.button_name }}" class="btn btn-primary">
+                                        Update Account
+                                    </button>
+                                </form>
 
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
-                        {% endfor %}
-                    {% endif %}
+                            {% elif section.id == "changePassword" %}
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <label class="form-label">New Password</label>
+                                        <input type="password" class="form-control" name="password">
+                                    </div>
 
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
-                        </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Verify Password</label>
+                                        <input type="password" class="form-control" name="passwordCheck">
+                                    </div>
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="first_name" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="last_name" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}">
-                        </div>
-
-                        <button type="submit" name="update_account" class="btn btn-primary">Update Account</button>
-                    </form>
+                                    <button type="submit"
+                                            name="{{ section.button_name }}"
+                                            class="btn btn-primary">
+                                        Update Password
+                                    </button>
+                                </form>
+                            {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Password Reset -->
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingPassword">
-                <button class="accordion-button {% if open_section != 'changePassword' %}collapsed{% endif %} text-primary fw-bold"
-                        type="button" data-bs-toggle="collapse" data-bs-target="#changePassword"
-                        aria-expanded="{% if open_section == 'changePassword' %}true{% else %}false{% endif %}"
-                        aria-controls="changePassword">
-                    Password Reset
-                </button>
-            </h2>
-
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-
-            <div id="changePassword"
-                 class="accordion-collapse collapse {% if open_section == 'changePassword' %}show{% endif %}"
-                 data-bs-parent="#accountAccordion">
-                <div class="accordion-body">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="password" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="password" name="password">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="passwordCheck" class="form-label">Verify Password</label>
-                            <input type="password" class="form-control" id="passwordCheck" name="passwordCheck">
-                        </div>
-
-                        <button type="submit" name="update_password" class="btn btn-primary">Update Password</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

@@ -72,9 +72,13 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'categories.context_processors.menu_links',
             ],
+            'libraries': {
+                'product_extras': 'products.templatetags.product_extras',
+            },
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'lsshop.wsgi.application'
 

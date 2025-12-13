@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.cache import cache
 
+# ---------------------------------------------------------------------------------------------
+# Helper function to get client IP address
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -13,6 +15,8 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+# ---------------------------------------------------------------------------------------------
+# Login and Register
 MAX_ATTEMPTS_LOGIN      = 5
 MAX_ATTEMPTS_REGISTER   = 3 
 BLOCK_TIME_LOGIN        = 300
@@ -99,10 +103,15 @@ def loginreg(request):
     return render(request, 'loginreg/loginreg.html', {'loginreg': loginreg})
 
 
+# ---------------------------------------------------------------------------------------------
 # Logout 
 def logout_view(request):
     logout(request)
     return redirect('loginreg:loginreg')
+
+
+# ---------------------------------------------------------------------------------------------
+# Account Management
 
 MAX_ATTEMPTS_INFO_CHANGE        = 2
 MAX_ATTEMPTS_PASSWORD_CHANGE    = 1
@@ -169,4 +178,31 @@ def account(request):
 
             open_section = 'changePassword'
 
-    return render(request, 'loginreg/account.html', {'user': user, 'open_section': open_section})
+    information = [
+        ("username", user.username),
+        ("email", user.email),
+        ("first_name", user.first_name),
+        ("last_name", user.last_name),
+    ]
+
+    accordion_sections = [
+        {
+            "id": "accountDetails",
+            "heading": "Account Info",
+            "button_name": "update_account",
+        },
+        {
+            "id": "changePassword",
+            "heading": "Password Reset",
+            "button_name": "update_password",
+        }
+    ]
+
+    context = {
+        'user': user,
+        'open_section': open_section,
+        'information': information,
+        'accordion_sections': accordion_sections,
+    }
+
+    return render(request, 'loginreg/account.html', context)

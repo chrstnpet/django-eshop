@@ -1,5 +1,6 @@
 {% extends 'layout.html' %}
 {% load static %}
+{% load product_extras %}
 
 {% block title %}Product Details{% endblock %}
 
@@ -46,26 +47,33 @@
                                 </div>
                             </div>
                         </div> <!-- row.// -->
-                        {% if size_variants %}
-                            <div class="row">
-                                <div class="item-option-select">
-                                    <h6 class="mt-4">Choose Size:</h6>
-                                    <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-                                        {% for size in size_variants %}
-                                            <label class="btn btn-light {% if not size.is_available %}text-muted disabled{% endif %}">
-                                                <input 
-                                                    type="radio" 
-                                                    name="size" 
-                                                    value="{{ size.id }}" 
-                                                    {% if not size.is_available %}disabled{% endif %}
-                                                >
-                                                {{ size.size.size }}
+                        <div class="row">
+                            <div class="item-option-select">
+                                <h6 class="mt-4">Choose Size:</h6>
+
+                                {% for color in color_variants %}
+                                    <div class="btn-group btn-group-sm size-group
+                                                {% if not forloop.first %}d-none{% endif %}"
+                                        role="group"
+                                        data-color-id="{{ color.id }}">
+
+                                        {% for size in sizes_by_color|get_item:color.id %}
+                                            <label class="btn btn-light
+                                                {% if size.inventory <= 0 %}text-muted disabled{% endif %}">
+
+                                                <input type="radio"
+                                                    name="size"
+                                                    value="{{ size.id }}"
+                                                    {% if size.inventory <= 0 %}disabled{% endif %}>
+
+                                                {{ size.size }}
                                             </label>
                                         {% endfor %}
-                                    </div> 
-                                </div>
-                            </div> <!-- row.// -->
-                        {% endif %}
+
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div> <!-- row.// -->
                         <hr>
                         {% if is_product_available %}
                             <a href="#" class="btn btn-primary">
