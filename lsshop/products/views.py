@@ -88,6 +88,7 @@ def product_detail(request, category_slug, product_slug):
         'color_variants': color_variants,
         'selected_variant': selected_variant,
         'size_variants': size_variants,
+        'show_secondary_header': True,
     }
 
     return render(request, 'products/product_detail.html', context)

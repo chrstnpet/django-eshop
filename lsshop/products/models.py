@@ -1,5 +1,6 @@
 from django.db import models
 from categories.models import Category
+from django.urls import reverse
 
 
 class Size(models.Model):
@@ -31,6 +32,9 @@ class Product(models.Model):
 
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     description = models.TextField(max_length=500, blank=True)
+
+    def get_url(self):
+        return reverse('products:product_detail', args=[self.category.slug, self.slug])
 
     def __str__(self):
         return self.product_name
