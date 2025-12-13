@@ -26,6 +26,70 @@ def products(request, category_slug=None):
 
     return render(request, "products/store.html", context)
 
+def apply_filters(request):
+    products = Product.objects.all()
+
+    parent_groups = {
+        "accessories": "Accessories",
+        "apparel": "Apparel",
+        "stationary": "Stationary",
+    }
+
+    category_filters = Q()
+
+    for param, parent_name in parent_groups.items():
+        values = request.GET.getlist(param)
+        if not values:
+            continue
+        if "All" in values:
+            category_filters |= (
+                Q(category__parent__category_name=parent_name) |
+                Q(category__category_name=parent_name) |
+                Q(sub_category__parent__category_name=parent_name)
+            )
+        else:
+            category_filters |= (
+                Q(category__category_name__in=values) |
+                Q(sub_category__category_name__in=values)
+            )
+
+    if category_filters:
+        products = products.filter(category_filters)
+
+    # Size filter
+    sizes = request.GET.getlist("sizes")
+    if sizes:
+        products = products.filter(colors__sizes__size__size__in=sizes)
+
+    # Availability filter
+    availability = request.GET.getlist("availability")
+    if "available" in availability:
+        products = products.filter(colors__sizes__inventory__gt=0)
+    if "unavailable" in availability:
+        products = products.exclude(colors__sizes__inventory__gt=0)
+
+    # Price filter
+    min_price = request.GET.get("min_price")
+    max_price = request.GET.get("max_price")
+
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
+
+    products = products.distinct()
+
+    products_page, paginator = paginate_queryset(request, products)
+
+    context = {
+        "products": products_page,
+        "paginator": paginator,
+        "product_count": products.count(),
+    }
+    context.update(store_essentials())
+
+    return render(request, "products/store.html", context)
+
 
 # -------------------------------------------------------------------------------------
 # Individual product pages
@@ -104,10 +168,11 @@ def store_essentials():
 
     accessory_categories    = ["All", "Bags", "Keychains", "Pins"]
     apparel_categories      = ["All", "Crewnecks", "Headwear", "Hoodies", "Shirts"]
-    stationery_categories   = ["All", "Notebooks", "Pens", "Stickers"]
-    size_categories         = ["All", "XS", "S", "M", "L", "XL", "XXL"]
-    color_categories        = ["All", "Black", "White", "Ciel", "Pink", "Mint", "Grey"]
-    availability_options    = [
+    stationary_categories   = ["All", "Notebooks", "Pens", "Stickers"]
+    size_categories         = ["XS", "S", "M", "L", "XL", "XXL"]
+    colors                  = ["Black", "White", "Ciel", "Pink", "Mint", "Grey"]
+
+    availability_options = [
         ("available", "Show Available Only"), 
         ("unavailable", "Show Non-Available")
     ]
@@ -121,12 +186,12 @@ def store_essentials():
                 "items": apparel_categories,
                 "sizes": size_categories
             },
-            "Stationery": {
-                "items": stationery_categories
+            "Stationary": {
+                "items": stationary_categories
             },
         },
         "availability_options": availability_options,
-        "colors": color_categories,
+        "colors": colors,
         "show_secondary_header": True,
     }
 
