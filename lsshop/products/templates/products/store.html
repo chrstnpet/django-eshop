@@ -7,7 +7,11 @@
     <main style="margin-top: 200px;" id="store-page">
         <section class="section-pagetop bg">
             <div class="container">
-                <h2 class="title-page">Our Store</h2>
+                {% if 'search' in request.path %}
+                    <h2 class="title-page my-5">Search Results</h2>
+                {% else %}
+                    <h2 class="title-page my-5">Our Store</h2>
+                {% endif %}
             </div> 
         </section>
 
@@ -109,8 +113,8 @@
                                     </div>
                                 </article> <!-- filter-group .// -->
                             </div> <!-- card.// -->
+                            <button class="btn btn-block btn-primary mt-1">Apply</button>
                         </form>
-                        <button class="btn btn-block btn-primary mt-1">Apply</button>
                     </aside> <!-- col.// -->
                     
                     <main class="col-lg-9 col-12">
@@ -124,31 +128,35 @@
                         </header>
 
                         <div class="row">
-                            {% for product in products %}
-                                {% with first_color=product.colors.first %}
-                                    {% if first_color %}
-                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                                            <a href="{{ product.get_url }}">
-                                                <figure class="card card-product-grid align-items-center h-100">
-                                                    <button class="btn btn-light btn-outline-secondary mt-2" type="submit"><i class="bi bi-suit-heart"></i></button>
-                                                    <div class="img-wrap text-center">
-                                                        <img src="{{ first_color.front_image.url }}" class="img-fluid" style="max-height:250px;">
-                                                    </div>
-                                                    <figcaption class="info-wrap">
-                                                        <div class="fix-height">
-                                                            <a href="#" class="title">{{ product.product_name }}</a>
-                                                            <div class="price-wrap mt-2">
-                                                                ${{ product.price }}
-                                                            </div>
+                            {% if products %}
+                                {% for product in products %}
+                                    {% with first_color=product.colors.first %}
+                                        {% if first_color %}
+                                            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                                                <a href="{{ product.get_url }}">
+                                                    <figure class="card card-product-grid align-items-center h-100">
+                                                        <button class="btn btn-light btn-outline-secondary mt-2" type="submit"><i class="bi bi-suit-heart"></i></button>
+                                                        <div class="img-wrap text-center">
+                                                            <img src="{{ first_color.front_image.url }}" class="img-fluid" style="max-height:250px;">
                                                         </div>
-                                                        <a href="#" class="btn btn-primary btn-block mt-2">Add to cart</a>
-                                                    </figcaption>
-                                                </figure>
-                                            </a>
-                                        </div>
-                                    {% endif %}
-                                {% endwith %}
-                            {% endfor %}
+                                                        <figcaption class="info-wrap">
+                                                            <div class="fix-height">
+                                                                <a href="#" class="title">{{ product.product_name }}</a>
+                                                                <div class="price-wrap mt-2">
+                                                                    ${{ product.price }}
+                                                                </div>
+                                                            </div>
+                                                            <a href="#" class="btn btn-primary btn-block mt-2">Add to cart</a>
+                                                        </figcaption>
+                                                    </figure>
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endfor %}
+                            {% else %}
+                            <h2>No Results Found</h2>
+                            {% endif %}
                         </div>
 
                         {% include 'products/pagination.html' with page_obj=products%}

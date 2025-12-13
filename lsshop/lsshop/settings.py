@@ -145,3 +145,5 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+X_FRAME_OPTIONS = 'DENY' # this disallows 3rd party from embedding our website in iframes -> safa against clickjacking

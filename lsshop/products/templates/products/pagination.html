@@ -1,27 +1,40 @@
-<nav class="mt-4" aria-label="Page navigation sample">
+{% if page_obj.has_other_pages %}
+<nav>
     <ul class="pagination">
-        {% if products.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link"
+               href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">
+                Previous
+            </a>
+        </li>
         {% endif %}
 
-        {% for num in products.paginator.page_range %}
-            {% if products.number == num %}
-                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% for i in page_obj.paginator.page_range %}
+            {% if page_obj.number == i %}
+                <li class="page-item active">
+                    <span class="page-link">{{ i }}</span>
+                </li>
             {% else %}
-                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ i }}">
+                        {{ i }}
+                    </a>
+                </li>
             {% endif %}
         {% endfor %}
 
-        {% if products.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
-            </li>
-        {% else %}
-            <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link"
+               href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">
+                Next
+            </a>
+        </li>
         {% endif %}
+
     </ul>
 </nav>
+{% endif %}

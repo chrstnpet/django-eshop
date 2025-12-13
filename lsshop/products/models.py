@@ -1,7 +1,11 @@
 from django.db import models
 from categories.models import Category
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 
+def validate_image(image):
+    if image.size > 2 * 1024 * 1024:
+        raise ValidationError("Image file too large")
 
 class Size(models.Model):
     size = models.CharField(max_length=4)
@@ -44,8 +48,8 @@ class ProductColorVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="colors")
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
 
-    front_image = models.ImageField(upload_to='products/', blank=True, null=True)
-    back_image = models.ImageField(upload_to='products/', blank=True, null=True)
+    front_image = models.ImageField(upload_to='products/', blank=True, null=True, validators=[validate_image])
+    back_image = models.ImageField(upload_to='products/', blank=True, null=True, validators=[validate_image])
 
     def is_available(self):
         return self.sizes.filter(inventory__gt=0).exists()

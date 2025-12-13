@@ -2,62 +2,33 @@ from django.shortcuts import render, get_object_or_404
 from .models import Product, ProductSizeVariant, ProductColorVariant, Size, Color
 from categories.models import Category
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q
 
+# Store main page
 def products(request, category_slug=None):
-    categories  = None 
-    products    = None 
-
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
         products = Product.objects.filter(category=category)
     else:
         products = Product.objects.prefetch_related('colors__sizes').all()
 
-    page = request.GET.get('page', 1)
-    paginator = Paginator(products, 9)
-    try:
-        products_page = paginator.page(page)
-    except PageNotAnInteger:
-        products_page = paginator.page(1)
-    except EmptyPage:
-        products_page = paginator.page(paginator.num_pages)
+    products_page, paginator = paginate_queryset(request, products)
         
     product_count = products.count()
-
-    accessory_categories    = ["All", "Bags", "Keychains", "Pins"]
-    apparel_categories      = ["All", "Crewnecks", "Headwear", "Hoodies", "Shirts"]
-    stationery_categories   = ["All", "Notebooks", "Pens", "Stickers"]
-    size_categories         = ["All", "XS", "S", "M", "L", "XL", "XXL"]
-    color_categories        = ["All", "Black", "White", "Ciel", "Pink", "Mint", "Grey"]
-    availability_options    = [
-        ("available", "Show Available Only"), 
-        ("unavailable", "Show Non-Available")
-    ]
 
     context = {
         'products': products_page,
         'paginator': paginator,
         'product_count': product_count,
-        'categories': categories,
-        "category_groups": {
-            "Accessories": {
-                "items": accessory_categories
-            },
-            "Apparel": {
-                "items": apparel_categories,
-                "sizes": size_categories
-            },
-            "Stationery": {
-                "items": stationery_categories
-            },
-        },
-        "availability_options": availability_options,
-        "colors": color_categories,
-        'show_secondary_header': True,
     }
+
+    context.update(store_essentials())
 
     return render(request, "products/store.html", context)
 
+
+# -------------------------------------------------------------------------------------
+# Individual product pages
 def product_detail(request, category_slug, product_slug):
     single_product = get_object_or_404(
         Product.objects.prefetch_related('colors__sizes__size'),
@@ -88,7 +59,79 @@ def product_detail(request, category_slug, product_slug):
         'color_variants': color_variants,
         'selected_variant': selected_variant,
         'size_variants': size_variants,
-        'show_secondary_header': True,
     }
 
     return render(request, 'products/product_detail.html', context)
+
+
+#-------------------------------------------------------------------------------------
+# Search
+def search(request):
+    keyword = request.GET.get('keyword', '').strip()[:50]
+    products = Product.objects.none()
+
+    if keyword:
+        products = Product.objects.filter(
+            Q(product_name__icontains=keyword) |
+            Q(colors__color__color__icontains=keyword) |
+            Q(category__category_name__icontains=keyword) |
+            Q(colors__sizes__size__size__icontains=keyword)
+        ).distinct()
+
+    products_page, paginator = paginate_queryset(request, products)
+
+    context = {
+        'products': products_page,
+        'paginator': paginator,
+        'product_count': products.count(),
+    }
+
+    context.update(store_essentials())
+
+    return render(request, 'products/store.html', context)
+
+
+# -------------------------------------------------------------------------------------------
+# Essentials
+def store_essentials():
+
+    accessory_categories    = ["All", "Bags", "Keychains", "Pins"]
+    apparel_categories      = ["All", "Crewnecks", "Headwear", "Hoodies", "Shirts"]
+    stationery_categories   = ["All", "Notebooks", "Pens", "Stickers"]
+    size_categories         = ["All", "XS", "S", "M", "L", "XL", "XXL"]
+    color_categories        = ["All", "Black", "White", "Ciel", "Pink", "Mint", "Grey"]
+    availability_options    = [
+        ("available", "Show Available Only"), 
+        ("unavailable", "Show Non-Available")
+    ]
+
+    return {
+        "category_groups": {
+            "Accessories": {
+                "items": accessory_categories
+            },
+            "Apparel": {
+                "items": apparel_categories,
+                "sizes": size_categories
+            },
+            "Stationery": {
+                "items": stationery_categories
+            },
+        },
+        "availability_options": availability_options,
+        "colors": color_categories,
+        "show_secondary_header": True,
+    }
+
+
+# -------------------------------------------------------------------------------
+# Pagination
+def paginate_queryset(request, queryset, per_page=9):
+    paginator = Paginator(queryset, per_page)
+
+    try:
+        page = min(int(request.GET.get('page', 1)), paginator.num_pages)
+    except ValueError:
+        page = 1
+
+    return paginator.page(page), paginator
