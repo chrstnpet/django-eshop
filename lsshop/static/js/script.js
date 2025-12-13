@@ -1,9 +1,3 @@
-// document.querySelectorAll("input[type=checkbox]").forEach(cb => {
-//     cb.addEventListener("change", () => {
-//         cb.closest("form").submit();
-//     })
-// })
-
 document.addEventListener("DOMContentLoaded", function () {
     const imageElement = document.getElementById("main-product-image");
     const colors = document.querySelectorAll("input[name='color']");
@@ -43,21 +37,5 @@ document.addEventListener("DOMContentLoaded", function () {
         if (frontImg) {
             imageElement.src = frontImg;
         }
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const thumbs = document.querySelectorAll(".small-thumb");
-    const mainImage = document.getElementById("main-product-image");
-
-    thumbs.forEach(thumb => {
-        thumb.addEventListener("click", function() {
-            const largeSrc = thumb.getAttribute("data-large");
-            mainImage.src = largeSrc;
-
-            // Optional: highlight active thumb
-            thumbs.forEach(t => t.classList.remove("border-primary"));
-            thumb.classList.add("border-primary");
-        });
     });
 });
