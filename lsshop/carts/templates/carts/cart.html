@@ -34,7 +34,7 @@
                                                 <div class="d-flex flex-column flex-sm-row align-items-center">
                                                     <img src="{{ cart_item.product.color_variant.front_image.url }}" class="img-thumbnail me-sm-3 mb-2 mb-sm-0" width="100" alt="{{ cart_item.product.color_variant.product.product_name }}">
                                                     <div class="flex-grow-1 text-center text-sm-start">
-                                                        <a href="#" class="text-dark fw-semibold mb-1 d-block">{{ cart_item.product.color_variant.product.product_name }}</a>
+                                                        <a href="{{ cart_item.product.color_variant.product.get_url }}" class="text-dark fw-semibold mb-1 d-block">{{ cart_item.product.color_variant.product.product_name }}</a>
                                                         <small class="text-muted d-block">
                                                             <span class="me-2"><strong>Color:</strong> {{ cart_item.product.color_variant.color }}</span>
                                                             <span><strong>Size:</strong> {{ cart_item.product.size }}</span>
@@ -99,7 +99,7 @@
                                             <img src="{% static 'images/payments.png' %}" height="26">
                                         </p>
                                         <a href="./place-order.html" class="btn btn-primary btn-block"> Checkout </a>
-                                        <a href="./store.html" class="btn btn-light btn-block mt-2">Continue Shopping</a>
+                                        <a href="{% url 'products:products' %}" class="btn btn-light btn-block mt-2">Continue Shopping</a>
                                     </div>
                                 </div> <!-- card-body.// -->
                             </div> <!-- card.// -->
