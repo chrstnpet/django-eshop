@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'categories',
     'products',
     'nested_admin',
+    'carts',
 ]
 
 MIDDLEWARE = [
