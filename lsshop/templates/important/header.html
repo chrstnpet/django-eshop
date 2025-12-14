@@ -22,6 +22,9 @@
                     <a href="{% url 'home:home' %}" class="nav-item nav-link">Home</a>
                     <a href="{% url 'products:products' %}" class="nav-item nav-link">Products</a>
                     {% if user.is_authenticated %}
+                        {% if 'cart' not in request.path %}
+                            <a href="{% url 'carts:cart' %}" class="nav-item nav-link">Cart</a>
+                        {% endif %}
                         <a href="{% url 'loginreg:account' %}" class="nav-item nav-link">Account</a>
                         <form method="post" action="{% url 'loginreg:logout' %}" class="nav-item nav-link">
                             {% csrf_token %}
@@ -38,48 +41,59 @@
     </nav>
 
     {% if show_secondary_header %}
-    <section class="nav-section pb-2 border-bottom bg-white">
-        <div class="container">
-            <div class="row align-items-center justify-content-between g-2">
-                <!-- Categories toggle -->
-                 <div class="col-sm-12 col-md-6 col-lg-4">
-                    <div class="category-wrap dropdown d-inline-block float-right">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"> 
-                            Categories
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{% url 'products:products' %}">All Products</a>
-                            {% for category in links %}
-                                <a class="dropdown-item" href="{{ category.get_url }}">{{ category.category_name }}</a>
-                            {% endfor %}
-                        </div>
-                    </div>  <!-- category-wrap.// -->
-                 </div>
-
-                <!-- Search bar -->
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <form action="{% url 'products:search' %}" class="search w-100" method="GET">
-                        <div class="input-group w-100">
-                            <input type="text" class="form-control" placeholder="Search: category, name, color, size" name="keyword">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-search"></i>
+        <section class="nav-section pb-2 border-bottom bg-white">
+            <div class="container">
+                <div class="row align-items-center justify-content-between g-2 text-center text-md-start">
+                    
+                    <!-- Categories toggle -->
+                    <div class="col-12 col-md-4 mb-2 mb-md-0 d-flex justify-content-center justify-content-md-start">
+                        <div class="category-wrap dropdown">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"> 
+                                Categories
                             </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{% url 'products:products' %}">All Products</a>
+                                {% for category in links %}
+                                    <a class="dropdown-item" href="{{ category.get_url }}">{{ category.category_name }}</a>
+                                {% endfor %}
+                            </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
 
-                <!-- Greeting -->
-                <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-sm-end align-items-center">
-                    {% if user.is_authenticated %}
-                        <span class="text-muted fw-medium">
-                            Hello, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!
-                        </span>
-                    {% endif %}
-                </div>
+                    <!-- Search bar -->
+                    <div class="col-12 col-md-4 mb-2 mb-md-0 d-flex justify-content-center">
+                        <form action="{% url 'products:search' %}" class="w-100" method="GET">
+                            <div class="input-group w-100">
+                                <input type="text" class="form-control" placeholder="Search: category, name, color, size" name="keyword">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
 
-            </div> <!-- row -->
-        </div> <!-- container -->
-    </section>
+                    <!-- Cart & Greeting -->
+                    <div class="col-12 col-md-4 d-flex flex-column flex-sm-row align-items-center justify-content-center justify-content-md-end gap-2 gap-sm-3">
+                        {% if user.is_authenticated %}
+                            <!-- Cart Section -->
+                             {% if 'cart' not in request.path %}
+                                <a href="{% url 'carts:cart' %}" class="d-flex align-items-center text-decoration-none">
+                                    <i class="bi bi-bag-heart-fill fs-2 text-primary"></i>
+                                    <span class="ms-2 fw-semibold">View Cart</span>
+                                </a>
+                            {% endif %}
+
+                            <!-- Greeting -->
+                            <span class="text-muted fw-medium mt-1 mt-sm-0 ms-sm-3">
+                                Hello, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}!
+                            </span>
+                        {% endif %}
+                    </div>
+
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </section>
+
     {% endif %}
 
 
