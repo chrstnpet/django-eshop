@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product, ProductSizeVariant, ProductColorVariant, Size, Color
 from categories.models import Category
-from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
+from collections import defaultdict
 
 # Store main page
 def products(request, category_slug=None):
@@ -94,8 +94,6 @@ def apply_filters(request):
 
 # -------------------------------------------------------------------------------------
 # Individual product pages
-from collections import defaultdict
-
 def product_detail(request, category_slug, product_slug):
     single_product = get_object_or_404(
         Product.objects.prefetch_related(
@@ -107,16 +105,17 @@ def product_detail(request, category_slug, product_slug):
     )
 
     color_variants = single_product.colors.all()
-
-    # Build size map per color
     sizes_by_color = defaultdict(list)
 
     for color in color_variants:
-        for size in color.sizes.exclude(size__size="N/A"):
+        for size_variant in color.sizes.all():  # include N/A
+            size_name = size_variant.size.size
+            if size_name == "N/A":
+                size_name = "One size"
             sizes_by_color[color.id].append({
-                "id": size.id,
-                "size": size.size.size,
-                "inventory": size.inventory,
+                "id": size_variant.id,
+                "size": size_name,
+                "inventory": size_variant.inventory,
             })
 
     is_product_available = any(

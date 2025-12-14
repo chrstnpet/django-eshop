@@ -51,4 +51,32 @@ document.addEventListener("DOMContentLoaded", function () {
     imageElement.addEventListener("mouseleave", function () {
         imageElement.src = imageElement.dataset.front;
     });
+
+    // ----------------------------
+    // Add to Cart form
+    const addToCartForm = document.getElementById("add-to-cart-form");
+    const selectedSizeInput = document.getElementById("selected-size-variant");
+
+    if (addToCartForm) {
+        addToCartForm.addEventListener("submit", function (e) {
+            e.preventDefault(); // prevent default to validate selection
+
+            // get selected size radio
+            const selectedSize = document.querySelector("input[name='size']:checked");
+
+            if (!selectedSize) {
+                alert("Please select a size");
+                return;
+            }
+
+            // set hidden input value
+            selectedSizeInput.value = selectedSize.value;
+
+            // update form action dynamically
+            addToCartForm.action = `/cart/add/${selectedSize.value}/`;
+
+            // submit the form
+            addToCartForm.submit();
+        });
+    }
 });

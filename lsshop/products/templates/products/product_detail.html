@@ -50,36 +50,32 @@
                         <div class="row">
                             <div class="item-option-select">
                                 <h6 class="mt-4">Choose Size:</h6>
-
                                 {% for color in color_variants %}
                                     <div class="btn-group btn-group-sm size-group
-                                                {% if not forloop.first %}d-none{% endif %}"
-                                        role="group"
-                                        data-color-id="{{ color.id }}">
-
+                                                {% if not forloop.first %}d-none{% endif %}" role="group" data-color-id="{{ color.id }}">
                                         {% for size in sizes_by_color|get_item:color.id %}
                                             <label class="btn btn-light
                                                 {% if size.inventory <= 0 %}text-muted disabled{% endif %}">
-
-                                                <input type="radio"
-                                                    name="size"
-                                                    value="{{ size.id }}"
+                                                <input type="radio" name="size" value="{{ size.id }}"
+                                                    {% if size.inventory > 0 and size.size == "One size" %}checked{% endif %}
                                                     {% if size.inventory <= 0 %}disabled{% endif %}>
-
                                                 {{ size.size }}
                                             </label>
                                         {% endfor %}
-
                                     </div>
                                 {% endfor %}
                             </div>
                         </div> <!-- row.// -->
                         <hr>
                         {% if is_product_available %}
-                            <a href="#" class="btn btn-primary">
-                                <span class="text me-2">Add to cart</span>
-                                <i class="bi bi-cart"></i>
-                            </a>
+                            <form id="add-to-cart-form" method="post" action="{% url 'carts:add_cart' single_product.id %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="size_variant_id" id="selected-size-variant">
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="text me-2">Add to cart</span>
+                                    <i class="bi bi-cart"></i>
+                                </button>
+                            </form>
                         {% else %}
                             <div class="alert alert-danger mt-3" role="alert">
                                 <strong>Out of stock</strong>
