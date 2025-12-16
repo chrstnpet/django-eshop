@@ -59,7 +59,6 @@
                                             <label class="btn btn-light
                                                 {% if size.inventory <= 0 %}text-muted disabled{% endif %}">
                                                 <input type="radio" name="size" value="{{ size.id }}"
-                                                    {% if size.inventory > 0 and size.size == "One size" %}checked{% endif %}
                                                     {% if size.inventory <= 0 %}disabled{% endif %}>
                                                 {{ size.size }}
                                             </label>
@@ -91,9 +90,9 @@
         <br>
         <div class="row">
             <div class="col-md-9">
-                <header class="section-heading">
+                <div class="section-heading">
                     <h3>Customer Reviews </h3>            
-                </header>
+                </div>
                 <article class="box mb-3">
                     <div class="icontext w-100">
                         <img src="{{ single_product.front_image }}" class="img-xs icon rounded-circle">

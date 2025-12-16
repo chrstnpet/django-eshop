@@ -17,7 +17,7 @@
                 <aside class="col-lg-8">
                     <div class="card h-100 shadow-sm">
                         <div class="card-body">
-                            <form method="POST">
+                            <form method="POST" action="">
                                 {% csrf_token %}
                                 <div class="row g-3">
                                     {% for name, value in billing %}
@@ -29,7 +29,6 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-                            </form>
                         </div>
                     </div>
                 </aside>
@@ -56,10 +55,11 @@
                             </dl>
 
                             <div class="d-flex flex-column gap-2 mt-3">
-                                <a href="#" class="btn btn-primary w-100">Place Order</a>
+                                <button type="submit" name="submit" class="btn btn-block btn-primary w-100">Place Order</button>
                                 <a href="{% url 'products:products' %}" class="btn btn-outline-secondary w-100">
                                     Continue Shopping
                                 </a>
+                                </form>
                             </div>
                         </div>
                     </div>
