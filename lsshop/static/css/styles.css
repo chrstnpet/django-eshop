@@ -7,7 +7,7 @@
 
 :root {
     font-size: clamp(16px, 1vh, 30px);
-    --navbar-height: 70px; 
+    --navbar-height: 65px; 
     --subheader-height: 70px;
 }
 
@@ -76,7 +76,7 @@ header {
 /* -------------------- Content pages -------------------- */
 #home-page {
     flex: 1 0 auto;
-    padding-top: calc(var(--navbar-height) + 30px);
+    padding-top: calc(var(--navbar-height) + 20px);
 }
 
 #store-page, #prod-det-page, #account-page, #cart-page, #checkout-page {
