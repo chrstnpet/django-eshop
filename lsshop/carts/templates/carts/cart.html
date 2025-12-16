@@ -71,15 +71,15 @@
                                                 </a>
                                             </td>
                                         </tr>
-                                            {% if messages %}
-                                                {% for message in messages %}
-                                                    <div class="alert alert-{{ message.tags }} mt-2 mx-2" role="alert">
-                                                        {{ message }}
-                                                        <a href="{% url 'products:products' %}">Continue Shopping.</a>
-                                                    </div>
-                                                {% endfor %}
-                                            {% endif %}
                                         {% endfor %}
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                                <div class="alert alert-{{ message.tags }} mt-2 mx-2" role="alert">
+                                                    {{ message }}
+                                                    <a href="{% url 'products:products' %}">Continue Shopping.</a>
+                                                </div>
+                                            {% endfor %}
+                                            {% endif %}
                                     </tbody>
                                 </table>
                             </div> <!-- card.// -->
@@ -93,7 +93,7 @@
                                         <dd class="text-right">${{ total }}</dd>
                                     </dl>
                                     <dl class="dlist-align">
-                                        <dt>Delivery Fees:</dt>
+                                        <dt>Delivery Fee:</dt>
                                         <dd class="text-right"> ${{ delivery_tax }}.00</dd>
                                     </dl>
                                         <dl class="dlist-align">

@@ -4,17 +4,17 @@
 {% block title%}Home - Products{% endblock %}
 
 {% block body %}
-    <main style="margin-top: 13vh;">
+    <div id="home-page">
         <div class="banner">
             <img src="{% static 'images/banner.jpg' %}" style="width:100%;">
         </div>
 
         <div class="container mt-4">
 
-            <header class="section-heading d-flex align-center gap-2">
+            <div class="section-heading d-flex align-center gap-2">
                 <h1 class="section-title fs-3">Popular products</h1>
                 <a href="{% url 'products:products' %}" class="btn btn-outline-primary float-right">See all</a>
-            </header>
+            </div>
 
             <div class="row mt-4">
                 <div class="col-lg-3 col-md-6 col-sm-6 mt-2">
@@ -56,5 +56,5 @@
             </div> <!-- row.// -->
             
         </div><!-- container // -->
-    </main>
+    </div>
 {% endblock %}
