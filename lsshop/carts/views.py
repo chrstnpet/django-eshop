@@ -86,3 +86,45 @@ def cart(request, total=0, quantity=0, cart_items=None):
         'show_secondary_header': True,
     }
     return render(request, 'carts/cart.html', context)
+
+# ---------------------------------------------------------------
+@login_required(login_url='loginreg:loginreg')
+def checkout(request, total=0, quantity=0):
+    user = request.user
+    billing = [
+        ("first_name", user.first_name),
+        ("last_name", user.last_name),
+        ("Address Line 1", ""),
+        ("Address Line 2", ""),
+        ("City", ""),
+        ("Postal Code", ""),
+        ("Country", ""),
+        ("Phone Number", ""),
+    ]
+
+    grand_total = 0
+    delivery_tax = 2
+    try:
+        cart = Cart.objects.get(cart_id=_cart_id(request))
+        cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+        for cart_item in cart_items:
+            total += (cart_item.product.color_variant.product.price * cart_item.quantity)
+            quantity += cart_item.quantity
+        grand_total = total + delivery_tax
+    except Cart.DoesNotExist:
+        cart_items = []
+        total = 0
+        quantity = 0
+        pass
+
+    context = {
+        'total': total,
+        'delivery_tax': delivery_tax,
+        'grand_total': grand_total,
+        'quantity': quantity,
+        'cart_items': cart_items,
+        'billing': billing,
+        'show_secondary_header': True,
+    }
+
+    return render(request, 'carts/checkout.html', context)

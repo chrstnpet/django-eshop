@@ -80,11 +80,11 @@ header {
     padding-top: var(--navbar-height);
 }
 
-#store-page, #prod-det-page, #account-page, #cart-page {
+#store-page, #prod-det-page, #account-page, #cart-page, #checkout-page {
     flex: 1 0 auto;
     padding-top: calc(var(--navbar-height) + var(--subheader-height) + 30px);
-    padding-left: 5%;
-    padding-right: 5%;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 #loginreg {
@@ -112,6 +112,60 @@ header {
 
 .product-figure:hover {
     transform: scale(1.07);
+}
+
+@media (max-width: 575px) {
+    table.table-shopping-cart,
+    table.table-shopping-cart tbody,
+    table.table-shopping-cart tr,
+    table.table-shopping-cart td {
+        display: block;
+        width: 100%;
+        padding: 2%;
+    }
+
+    table.table-shopping-cart thead {
+        display: none;
+    }
+
+    table.table-shopping-cart tr {
+        border-bottom: 1px solid #dee2e6;
+        padding: 1rem 0;
+    }
+
+    table.table-shopping-cart td {
+        padding: 0.5rem 0;
+        border: none;
+    }
+
+    .cart-product {
+        margin-bottom: 0.75rem;
+    }
+
+    .cart-qty {
+        margin-bottom: 0.75rem;
+    }
+
+    .cart-row .btn-danger {
+        align-self: flex-end;
+    }
+
+    .cart-qty > div {
+        display: flex;
+        justify-content: center;
+    }
+
+    .cart-row td:last-child {
+        display: flex;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    .cart-row td:last-child .btn-danger {
+        width: 80%;
+        max-width: 260px;
+        padding: 0.5rem 1rem;
+    }
 }
 
 /*------------ Footer -------------*/
