@@ -81,7 +81,7 @@ header {
 
 #store-page, #prod-det-page, #account-page, #cart-page, #checkout-page {
     flex: 1 0 auto;
-    padding-top: calc(var(--navbar-height) + var(--subheader-height));
+    padding-top: calc(var(--navbar-height) + var(--subheader-height) + 30px);
     padding-left: 10%;
     padding-right: 10%;
 }
@@ -231,5 +231,12 @@ header {
 /*------------ Footer -------------*/
 .footer-contents {
     flex-shrink: 0;
-    padding: 1% 5%;
+    padding: 1rem 1.5rem;
+}
+
+/* Optional: extra spacing on very small screens */
+@media (max-width: 576px) {
+    .footer-contents {
+        padding: 1.5rem 1rem;
+    }
 }
