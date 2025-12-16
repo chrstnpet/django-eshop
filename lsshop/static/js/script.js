@@ -61,21 +61,17 @@ document.addEventListener("DOMContentLoaded", function () {
         addToCartForm.addEventListener("submit", function (e) {
             e.preventDefault(); // prevent default to validate selection
 
-            // get selected size radio
             const selectedSize = document.querySelector("input[name='size']:checked");
 
             if (!selectedSize) {
-                alert("Please select a size");
+                alert("Please select a size.");
                 return;
             }
 
-            // set hidden input value
             selectedSizeInput.value = selectedSize.value;
 
-            // update form action dynamically
             addToCartForm.action = `/cart/add/${selectedSize.value}/`;
 
-            // submit the form
             addToCartForm.submit();
         });
     }

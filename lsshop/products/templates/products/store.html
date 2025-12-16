@@ -142,8 +142,9 @@
                                                         <figcaption class="info-wrap">
                                                             <div class="fix-height">
                                                                 <a href="#" class="title">{{ product.product_name }}</a>
-                                                                <div class="price-wrap mt-2">
+                                                                <div class="mt-1 d-flex flex-column align-items-center">
                                                                     Price: ${{ product.price }}
+                                                                    <a href="{{ product.get_url }}" class="btn btn-block btn-success mt-2">View details</a>
                                                                 </div>
                                                             </div>
                                                         </figcaption>

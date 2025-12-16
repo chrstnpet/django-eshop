@@ -40,6 +40,8 @@
                                                 value="{{ variant.id }}"
                                                 data-image="{{ variant.front_image.url }}"
                                                 data-back="{% if variant.back_image %}{{ variant.back_image.url }}{% else %}{{ variant.front_image.url }}{% endif %}"
+                                                {% if not variant.is_available %}disabled{% endif %}
+                                                {% if forloop.first %}checked{% endif %}
                                                 {% if not variant.is_available %}disabled{% endif %}>
                                             {{ variant.color.color }}
                                         </label>

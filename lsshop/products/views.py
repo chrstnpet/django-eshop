@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product
+from .models import Product, ProductColorVariant, ProductSizeVariant
 from categories.models import Category
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -106,13 +106,6 @@ def product_detail(request, category_slug, product_slug):
         category__slug=category_slug,
         slug=product_slug
     )
-
-    # try:
-    #     in_cart = CartItem.objects.filter(cart__cart_id=_cart_id(request), product=single_product).exists()
-    #     return HttpResponse(in_cart)
-    #     exit()
-    # except CartItem.DoesNotExist:
-    #     in_cart = False
 
     color_variants = single_product.colors.all()
     sizes_by_color = defaultdict(list)

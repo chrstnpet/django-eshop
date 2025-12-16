@@ -71,6 +71,14 @@
                                                 </a>
                                             </td>
                                         </tr>
+                                            {% if messages %}
+                                                {% for message in messages %}
+                                                    <div class="alert alert-{{ message.tags }} mt-2 mx-2" role="alert">
+                                                        {{ message }}
+                                                        <a href="{% url 'products:products' %}">Continue Shopping.</a>
+                                                    </div>
+                                                {% endfor %}
+                                            {% endif %}
                                         {% endfor %}
                                     </tbody>
                                 </table>
