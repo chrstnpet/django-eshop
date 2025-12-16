@@ -4,8 +4,6 @@ from django.contrib.auth import authenticate, login , logout, update_session_aut
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.cache import cache
-from carts.models import Cart, CartItem
-from carts.views import _cart_id
 
 # ---------------------------------------------------------------------------------------------
 # Helper function to get client IP address

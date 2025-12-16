@@ -4,9 +4,6 @@ from categories.models import Category
 from django.core.paginator import Paginator
 from django.db.models import Q
 from collections import defaultdict
-from carts.models import CartItem
-from carts.views import _cart_id
-from django.http import HttpResponse
 
 # Store main page
 def products(request, category_slug=None):

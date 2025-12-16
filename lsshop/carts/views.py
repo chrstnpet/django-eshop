@@ -5,48 +5,46 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 # ---------------------------------------------------------------
-def _cart_id(request):
-    cart = request.session.session_key
-    if not cart:
-        cart = request.session.create()
+def get_cart(request):
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            request.session.create()
+            session_key = request.session.session_key
+
+        cart, created = Cart.objects.get_or_create(session_key=session_key)
+
     return cart
+
 
 @login_required(login_url='loginreg:loginreg')
 def add_cart(request, product_id):
-    product = ProductSizeVariant.objects.get(id=product_id)
+    product = get_object_or_404(ProductSizeVariant, id=product_id)
+    cart = get_cart(request)
 
-    try:
-        cart = Cart.objects.get(cart_id=_cart_id(request), user=request.user)
-    except Cart.DoesNotExist:
-        cart = Cart.objects.create(cart_id=_cart_id(request), user=request.user)
-        cart.save()
+    cart_item, created = CartItem.objects.get_or_create(
+        cart=cart,
+        product=product,
+        user=request.user,
+        defaults={"quantity": 1}
+    )
 
-    try:
-        cart_item = CartItem.objects.get(product=product, cart=cart, user=request.user)
+    if not created:
         if cart_item.quantity >= product.inventory:
-            messages.info(request, "Maximum available stock reached for this product.")
-            cart_item.quantity = product.inventory
+            messages.info(request, "Maximum available stock reached.")
         else:
             cart_item.quantity += 1
-        cart_item.save()
-    except CartItem.DoesNotExist:
-        if product.inventory < 1:
-            messages.error(request, "This product is out of stock.")
-            return redirect('carts:cart')
-        else:
-            cart_item = CartItem.objects.create(
-                product=product,
-                quantity=1,
-                cart=cart,
-                user = request.user
-            )
             cart_item.save()
+
     return redirect('carts:cart')
+
 
 # ---------------------------------------------------------------
 @login_required(login_url='loginreg:loginreg')
 def remove_cart(request, product_id):
-    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart = cart = get_cart(request)
     product = get_object_or_404(ProductSizeVariant, id=product_id)
     cart_item = get_object_or_404(CartItem, product=product, cart=cart, user=request.user)
     if cart_item.quantity > 1:
@@ -59,7 +57,7 @@ def remove_cart(request, product_id):
 
 @login_required(login_url='loginreg:loginreg')
 def remove_cart_item(request, product_id):
-    cart = Cart.objects.get(cart_id=_cart_id(request))
+    cart = cart = get_cart(request)
     product = get_object_or_404(ProductSizeVariant, id=product_id)
     cart_item = get_object_or_404(CartItem, product=product, cart=cart, user=request.user)
     cart_item.delete()
@@ -72,7 +70,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
     grand_total = 0
     delivery_tax = 2
     try:
-        cart = Cart.objects.get(cart_id=_cart_id(request))
+        cart = cart = get_cart(request)
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
         for cart_item in cart_items:
             total += (cart_item.product.color_variant.product.price * cart_item.quantity)
@@ -111,7 +109,7 @@ def checkout(request, total=0, quantity=0):
     grand_total = 0
     delivery_tax = 2
     try:
-        cart = Cart.objects.get(cart_id=_cart_id(request))
+        cart = cart = get_cart(request)
         cart_items = CartItem.objects.filter(cart=cart, is_active=True)
         for cart_item in cart_items:
             total += (cart_item.product.color_variant.product.price * cart_item.quantity)
