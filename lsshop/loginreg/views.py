@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login , logout, update_session_aut
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.cache import cache
+import requests
 
 # ---------------------------------------------------------------------------------------------
 # Helper function to get client IP address
@@ -47,7 +48,15 @@ def loginreg(request):
         if user is not None:
             login(request, user)
             cache.delete(login_key) 
-            return redirect('home:home')
+            url = request.META.get('HTTP_REFERER')
+            try:
+                query = requests.utils.urlparse(url).query
+                params = dict(x.split('=') for x in query.split('&'))
+                if 'next' in params:
+                    nextPage = params['next']
+                return redirect(nextPage)
+            except:
+                return redirect('home:home')
         else:
             attempts_login += 1
             cache.set(login_key, attempts_login, BLOCK_TIME_LOGIN)
