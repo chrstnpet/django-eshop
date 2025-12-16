@@ -1,0 +1,24 @@
+<div class="checkout-progress mb-4">
+    <div class="progress-steps">
+
+        <div class="step {% if step >= 1 %}active{% endif %}">
+            <div class="circle">1</div>
+            <span>Cart</span>
+        </div>
+
+        <div class="line {% if step >= 2 %}active{% endif %}"></div>
+
+        <div class="step {% if step >= 2 %}active{% endif %}">
+            <div class="circle">2</div>
+            <span>Billing</span>
+        </div>
+
+        <div class="line {% if step >= 3 %}active{% endif %}"></div>
+
+        <div class="step {% if step >= 3 %}active{% endif %}">
+            <div class="circle">3</div>
+            <span>Confirm</span>
+        </div>
+
+    </div>
+</div>

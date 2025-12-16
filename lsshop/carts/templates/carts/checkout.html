@@ -6,15 +6,17 @@
 {% block body %}
     <div id="checkout-page">
         <div class="container">
+            <h4 class="card-title mb-4">Billing Address</h4>
+            <div class="col-lg-8">
+                {% include "carts/checkout_progress.html" with step=2 %}
+            </div>
 
             <div class="row g-4">
 
                 <!-- ================= Billing Address ================= -->
-                <aside class="col-lg-6">
+                <aside class="col-lg-8">
                     <div class="card h-100 shadow-sm">
                         <div class="card-body">
-                            <h4 class="card-title mb-4">Billing Address</h4>
-
                             <form method="POST">
                                 {% csrf_token %}
                                 <div class="row g-3">
@@ -27,22 +29,43 @@
                                         </div>
                                     {% endfor %}
                                 </div>
-
-                                <div class="mt-4">
-                                    <button type="submit" name="{{ section.button_name }}" class="btn btn-primary w-100">
-                                        Update Account
-                                    </button>
-                                </div>
                             </form>
                         </div>
                     </div>
                 </aside>
 
                 <!-- ================= Cart & Summary ================= -->
-                <aside class="col-lg-6">
+                <aside class="col-lg-4">
+                    <!-- Order Summary -->
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="mb-3">Order Summary</h5>
+
+                            <dl class="d-flex justify-content-between">
+                                <dt>Total price:</dt>
+                                <dd>${{ total }}</dd>
+                            </dl>
+                            <dl class="d-flex justify-content-between">
+                                <dt>Delivery Fee:</dt>
+                                <dd>${{ delivery_tax }}.00</dd>
+                            </dl>
+                            <hr>
+                            <dl class="d-flex justify-content-between fw-bold">
+                                <dt>Grand Total:</dt>
+                                <dd>${{ grand_total }}</dd>
+                            </dl>
+
+                            <div class="d-flex flex-column gap-2 mt-3">
+                                <a href="#" class="btn btn-primary w-100">Place Order</a>
+                                <a href="{% url 'products:products' %}" class="btn btn-outline-secondary w-100">
+                                    Continue Shopping
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Cart Items -->
-                    <div class="card shadow-sm mb-4">
+                    <div class="card shadow-sm mt-3">
                         <div class="card-body p-0">
                             <div class="table-responsive">
                                 <table class="table table-borderless align-middle mb-0">
@@ -84,35 +107,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Order Summary -->
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="mb-3">Order Summary</h5>
-
-                            <dl class="d-flex justify-content-between">
-                                <dt>Total price:</dt>
-                                <dd>${{ total }}</dd>
-                            </dl>
-                            <dl class="d-flex justify-content-between">
-                                <dt>Delivery Fee:</dt>
-                                <dd>${{ delivery_tax }}.00</dd>
-                            </dl>
-                            <hr>
-                            <dl class="d-flex justify-content-between fw-bold">
-                                <dt>Grand Total:</dt>
-                                <dd>${{ grand_total }}</dd>
-                            </dl>
-
-                            <div class="d-flex flex-column gap-2 mt-4">
-                                <a href="#" class="btn btn-primary w-100">Checkout</a>
-                                <a href="{% url 'products:products' %}" class="btn btn-outline-secondary w-100">
-                                    Continue Shopping
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
                 </aside>
             </div>
         </div>
