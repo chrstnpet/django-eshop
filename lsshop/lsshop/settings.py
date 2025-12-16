@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'loginreg',
     'categories',
     'products',
-    'python',
     'carts',
 ]
 
