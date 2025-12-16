@@ -61,13 +61,12 @@
                                             <td class="text-center text-sm-start">
                                                 <div class="d-flex flex-column align-items-center align-items-sm-start">
                                                     <span class="fw-bold">${{ cart_item.sub_total }}</span>
-                                                    <small class="text-muted">(${{ cart_item.product.color_variant.product.price }} each)</small>
                                                 </div>
                                             </td>
 
                                             <!-- Remove Button -->
                                             <td class="text-center text-sm-end">
-                                                <a href="{% url 'carts:remove_cart_item' cart_item.product.id %}" class="btn btn-danger btn-sm">
+                                                <a href="{% url 'carts:remove_cart_item' cart_item.product.id %}" class="btn btn-danger">
                                                     <i class="bi bi-trash-fill"></i> Remove
                                                 </a>
                                             </td>
@@ -98,7 +97,7 @@
                                         <p class="text-center mb-3">
                                             <img src="{% static 'images/payments.png' %}" height="26">
                                         </p>
-                                        <a href="./place-order.html" class="btn btn-primary btn-block"> Checkout </a>
+                                        <a href="#" class="btn btn-primary btn-block"> Checkout </a>
                                         <a href="{% url 'products:products' %}" class="btn btn-light btn-block mt-2">Continue Shopping</a>
                                     </div>
                                 </div> <!-- card-body.// -->
