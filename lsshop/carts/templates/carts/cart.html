@@ -38,6 +38,16 @@
                                     </thead>
 
                                     <tbody>
+{% if messages %}
+    {% for message in messages %}
+    <div class="m-2">
+        <div class="alert alert-info shadow-sm rounded-2" role="alert">
+            <p>{{ message }} <a href="{% url 'products:products' %}">Continue Shopping</a></p> 
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+
                                         {% for cart_item in cart_items %}
                                         <tr>
 
@@ -99,7 +109,6 @@
                                         </tr>
                                         {% endfor %}
                                     </tbody>
-
                                 </table>
                             </div>
                         </div>

@@ -33,7 +33,7 @@ def add_cart(request, product_id):
 
     if not created:
         if cart_item.quantity >= product.inventory:
-            messages.info(request, "Maximum available stock reached.")
+            messages.info(request, "Maximum available stock reached for this item.")
         else:
             cart_item.quantity += 1
             cart_item.save()
