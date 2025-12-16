@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'loginreg',
     'categories',
     'products',
-    'nested_admin',
+    'python',
     'carts',
 ]
 
