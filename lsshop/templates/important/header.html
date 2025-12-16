@@ -6,7 +6,7 @@
             <!-- Logo -->
             <a href="{% url 'home:home' %}" class="navbar-brand">
                 <div class="d-flex align-items-center gap-3">
-                    <img src="{% static 'images/logolounge-circle.png' %}" width="70">
+                    <img src="{% static 'images/logolounge-circle.png' %}" id="logo-image">
                     <p id="logo">Lounge Seminar E-Shop</p>
                 </div>
             </a>
@@ -89,12 +89,8 @@
                             </span>
                         {% endif %}
                     </div>
-
                 </div> <!-- row -->
             </div> <!-- container -->
         </section>
-
     {% endif %}
-
-
 </header>

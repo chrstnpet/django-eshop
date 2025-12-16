@@ -20,9 +20,7 @@
         <!-- Title -->
             <title>{% block title %}{% endblock %}</title>
     </head>
-    <body class="d-flex flex-column min-vh-100">
-       
-
+    <body>
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
         {% if messages %}
             {% for message in messages %}
@@ -40,7 +38,7 @@
         
         {% include "important/header.html" %}
 
-        <main class="flex-grow-1">
+        <main>
             {% block body %}
             {% endblock %}
         </main>

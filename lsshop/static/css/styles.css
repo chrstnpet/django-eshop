@@ -6,7 +6,7 @@
 }
 
 :root {
-    font-size: clamp(20px, 1vh, 30px);
+    font-size: clamp(16x, 1vh, 30px);
 }
 
 a {
@@ -16,8 +16,13 @@ a {
 /*------------ Header -------------*/
 #logo {
     font-family: 'Logo-Font', Arial, Helvetica, sans-serif;
-    font-size: clamp(25px, 5vh, 30px);
+    font-size: clamp(20px, 3vh, 25px);
     margin-top: 15px;
+}
+
+#logo-image {
+    width: clamp(50px, 9vh, 70px);
+    height: auto;
 }
 
 .nav-section {
@@ -30,7 +35,7 @@ a {
 
 @media (max-width: 576px) {
     main {
-        margin-top: 300px !important;
+        margin-top: 10vh !important;
     }
 }
 
@@ -40,6 +45,7 @@ a {
     }
 }
 
+/*------------ Other pages -------------*/
 #loginreg {
     margin-top: 160px;
     margin-bottom: 50px;
@@ -66,6 +72,21 @@ a {
     transform: scale(1.07);
 }
 
+#store-page, #cart-page, #account-page, #prod-det-page {
+    margin-top: 180px;
+}
+
+@media (max-width: 768px) {
+    #store-page, #cart-page, #account-page, #prod-det-page {
+        margin-top: 280px;
+    }
+}
+
+@media (max-width: 576px) {
+    #store-page, #cart-page, #account-page, #prod-det-page {
+        margin-top: 320px;
+    }
+}
 
 /*------------ Footer -------------*/
 .footer-contents {

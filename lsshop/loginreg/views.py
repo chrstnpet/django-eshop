@@ -203,6 +203,7 @@ def account(request):
         'open_section': open_section,
         'information': information,
         'accordion_sections': accordion_sections,
+        'show_secondary_header': True,
     }
 
     return render(request, 'loginreg/account.html', context)
