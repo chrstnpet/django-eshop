@@ -3,3 +3,4 @@ gunicorn
 django-crispy-forms
 crispy-bootstrap5
 django-nested-admin
+Pillow
