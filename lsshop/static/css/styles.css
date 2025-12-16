@@ -13,14 +13,13 @@
 
 @media (max-width: 768px) {
     :root {
-        --navbar-height: 70px;
+        font-size: clamp(18px, 1vh, 30px);
         --subheader-height: 170px;
     }
 }
 
 @media (max-width: 576px) {
     :root {
-        --navbar-height: 60px;
         --subheader-height: 230px;
     }
 }
@@ -77,12 +76,12 @@ header {
 /* -------------------- Content pages -------------------- */
 #home-page {
     flex: 1 0 auto;
-    padding-top: var(--navbar-height);
+    padding-top: calc(var(--navbar-height) + 30px);
 }
 
 #store-page, #prod-det-page, #account-page, #cart-page, #checkout-page {
     flex: 1 0 auto;
-    padding-top: calc(var(--navbar-height) + var(--subheader-height) + 30px);
+    padding-top: calc(var(--navbar-height) + var(--subheader-height));
     padding-left: 10%;
     padding-right: 10%;
 }
