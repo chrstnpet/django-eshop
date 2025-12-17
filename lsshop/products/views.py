@@ -1,9 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from .models import Product, ProductColorVariant, ProductSizeVariant
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Product, ReviewRating, ProductSizeVariant, ProductColorVariant
 from categories.models import Category
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Avg
 from collections import defaultdict
+from .forms import ReviewForm
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from orders.models import OrderProduct
 
 # Store main page
 def products(request, category_slug=None):
@@ -124,11 +128,27 @@ def product_detail(request, category_slug, product_slug):
         for size in sizes
     )
 
+    orderproduct = None
+    if request.user.is_authenticated:
+        product_variants = ProductSizeVariant.objects.filter(color_variant__product=single_product)
+
+        orderproduct = OrderProduct.objects.filter(
+            user=request.user,
+            product_variant__in=product_variants,
+            ordered=True
+        ).exists()
+
+    reviews = ReviewRating.objects.filter(product_id=single_product.id)
+    average_rating = reviews.aggregate(avg=Avg('rating'))['avg']
+
     context = {
         "single_product": single_product,
         "color_variants": color_variants,
         "sizes_by_color": dict(sizes_by_color),
         "is_product_available": is_product_available,
+        "orderproduct": orderproduct,
+        "reviews": reviews,
+        "average_rating": average_rating,
     }
 
     context.update(store_essentials())
@@ -207,3 +227,32 @@ def paginate_queryset(request, queryset, per_page=9):
         page = 1
 
     return paginator.page(page), paginator
+
+
+# -------------------------------------------------------------------------------
+@login_required(login_url='loginreg:loginreg')
+def submit_review(request, product_id):
+    url = request.META.get('HTTP_REFERER')
+    if request.method == 'POST':
+        try:
+            reviews = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)
+            form = ReviewForm(request.POST, instance=reviews)
+            form.save()
+            messages.success(request, "Your review has been updated!")
+            return redirect(url)
+        except ReviewRating.DoesNotExist:
+            form = ReviewForm(request.POST)
+            if not request.POST.get('rating'):
+                messages.info(request, "Please add a rating.")
+                return redirect(url)
+            if form.is_valid():
+                data = ReviewRating()
+                data.subject = form.cleaned_data['subject']
+                data.rating = form.cleaned_data['rating']
+                data.review = form.cleaned_data['review']
+                data.ip = request.META.get('REMOTE_ADDR')
+                data.product_id = product_id 
+                data.user_id = request.user.id
+                data.save()
+                messages.success(request, "Thanky you! Your review has been submitted!")
+                return redirect(url)

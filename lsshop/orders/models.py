@@ -23,7 +23,7 @@ class Order(models.Model):
     postal_code     = models.CharField(max_length=10, blank=True, null=True)
     order_total     = models.FloatField()
     delivery_fee    = models.IntegerField(default=2)
-    status          = models.CharField(max_length=10, choices=status, default='New')
+    status          = models.CharField(max_length=10, choices=status, default='Accepted')
     ip              = models.CharField(blank=True, max_length=20)
     is_ordered      = models.BooleanField(default=False)
     created_at      = models.DateTimeField(auto_now_add=True)

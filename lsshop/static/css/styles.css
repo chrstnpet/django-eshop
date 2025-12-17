@@ -228,9 +228,54 @@ header {
     }
 }
 
-#rate {
+/*--------- Rating stuff ---------*/
+.rate > input {
     display: none;
 }
+
+.rate {
+    display: inline-block;
+    border: 0;
+}
+
+.rate > label {
+    float: right;
+}
+
+.rate > label:before {
+    display: inline-block;
+    font-size: 1.1rem;
+    font-family: FontAwesome;
+    content: "\f005";
+    margin: 0;
+    padding: 0.3rem .2rem;
+    cursor: pointer;
+}
+
+.rate .half:before {
+    content: "\f089";
+    position: absolute;
+    padding-right: 0;
+}
+
+.rate input:checked ~ label, .rate label:hover ~ label {
+    color: #ffb503;
+}
+
+.rate input:checked + label:hover, 
+.rate input:checked ~ label:hover, 
+.rate input:checked ~ label:hover ~ label, 
+.rate label:hover ~ input:checked ~ label {
+    color: #cc9000;
+}
+
+.rating-star i,
+.rating-star i::before {
+    color: #ffb503;   /* for full stars */
+    /* no need for fill; Bootstrap Icons use 'color' via ::before */
+}
+
+
 
 /*------------ Footer -------------*/
 .footer-contents {
