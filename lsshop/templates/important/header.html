@@ -25,7 +25,10 @@
                         {% if 'cart' not in request.path %}
                             <a href="{% url 'carts:cart' %}" class="nav-item nav-link">Cart</a>
                         {% endif %}
-                        <a href="{% url 'loginreg:account' %}" class="nav-item nav-link">Account</a>
+                            <a href="{% url 'loginreg:account' %}" class="nav-item nav-link">Account</a>
+                        {% if user.is_superuser %}
+                            <a href="{% url 'admin:index' %}" class="nav-item nav-link" target="_blank">Admin Panel</a>
+                        {% endif %}
                         <form method="post" action="{% url 'loginreg:logout' %}" class="nav-item nav-link">
                             {% csrf_token %}
                             <button type="submit" class="nav-item nav-link btn btn-link p-0 m-0">
