@@ -82,7 +82,18 @@
                                 <strong>Out of stock</strong>
                             </div>
                         {% endif %}
-                        <button class="btn btn-light btn-outline-secondary my-2" type="submit"><i class="bi bi-suit-heart"></i></button>
+                        {% if user.is_authenticated %}
+                            <form method="post" action="{% url 'loginreg:wishlist' single_product.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-light btn-outline-secondary mt-2">
+                                    <i class="bi bi-suit-heart"></i>
+                                </button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'loginreg:loginreg' %}" class="btn btn-light btn-outline-secondary">
+                                <i class="bi bi-suit-heart"></i>
+                            </a>
+                        {% endif %}
                     </article>
                 </main>
             </div>

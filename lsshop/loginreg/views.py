@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login , logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.cache import cache
 import requests
-from orders.models import Order, OrderProduct
+from orders.models import Order
+from products.models import Product, Wishlist
 
 # ---------------------------------------------------------------------------------------------
 # Helper function to get client IP address
@@ -209,11 +210,17 @@ def account(request):
         {
             "id": "orderHistory",
             "heading": "Order History",
+        },
+        {
+            "id": "viewWishlist",
+            "heading": "Wishlist",
         }
     ]
 
     orders = Order.objects.order_by('created_at').filter(user_id=request.user.id, is_ordered=True)
     orders_count = orders.count()
+
+    wishlist_items = Wishlist.objects.filter(user=request.user).select_related('product')
 
     context = {
         'user': user,
@@ -223,6 +230,7 @@ def account(request):
         'show_secondary_header': True,
         'orders_count': orders_count,
         'orders': orders,
+        'wishlist_items': wishlist_items,
     }
 
     return render(request, 'loginreg/account.html', context)
@@ -235,3 +243,22 @@ def my_orders(request):
     }
 
     return render(request, 'account/my_orders.html', context)
+
+@login_required
+def wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+
+    wishlist_item = Wishlist.objects.filter(
+        user=request.user,
+        product=product
+    ).first()
+
+    if wishlist_item:
+        wishlist_item.delete()
+    else:
+        Wishlist.objects.create(
+            user=request.user,
+            product=product
+        )
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))

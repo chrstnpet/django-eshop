@@ -90,6 +90,49 @@
                                     </div>
                                     {% include 'loginreg/my_orders.html' with orders=orders %}
                                 </article>
+                            {% elif section.id == "viewWishlist" %}
+                                {% if wishlist_items %}
+                                    <div class="row">
+                                        {% for item in wishlist_items %}
+                                            <div class="col-md-3 col-sm-6 mb-4">
+                                                <div class="card h-100 shadow-sm text-center">
+
+                                                    {% with first_color=item.product.colors.first %}
+                                                        {% if first_color %}
+                                                            <img src="{{ first_color.front_image.url }}"
+                                                                class="card-img-top img-fluid"
+                                                                alt="{{ item.product.product_name }}">
+                                                        {% endif %}
+                                                    {% endwith %}
+
+                                                    <div class="card-body">
+                                                        <h6 class="card-title">{{ item.product.product_name }}</h6>
+                                                        <p class="fw-bold text-primary">${{ item.product.price }}</p>
+
+                                                        <a href="{{ item.product.get_url }}"
+                                                        class="btn btn-sm btn-outline-primary mb-2">
+                                                            View Details
+                                                        </a>
+
+                                                        <form method="post"
+                                                            action="{% url 'loginreg:wishlist' item.product.id %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit"
+                                                                    class="btn btn-sm btn-outline-danger">
+                                                                Remove <i class="bi bi-heartbreak-fill"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted text-center">
+                                        Your wishlist is empty.
+                                    </p>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>

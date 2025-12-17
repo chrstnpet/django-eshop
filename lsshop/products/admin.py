@@ -1,6 +1,6 @@
 import nested_admin
 from django.contrib import admin
-from .models import Product, ProductColorVariant, ProductSizeVariant, Size, Color, ReviewRating
+from .models import Product, ProductColorVariant, ProductSizeVariant, Size, Color, ReviewRating, Wishlist
 
 class ProductSizeVariantInline(nested_admin.NestedTabularInline):
     model = ProductSizeVariant
@@ -27,3 +27,4 @@ class ColorAdmin(admin.ModelAdmin):
     list_display = ('color',)
 
 admin.site.register(ReviewRating)
+admin.site.register(Wishlist)
