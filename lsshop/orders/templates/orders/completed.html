@@ -1,0 +1,61 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Order Completed{% endblock %}
+
+{% block body %}
+<div id="checkout-page" class="mt-4">
+    <div class="container">
+        <!-- Checkout Progress -->
+        <div class="mb-5">
+            {% include "carts/checkout_progress.html" with step=3 %}
+        </div>
+
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-primary">
+                <i class="bi bi-check-circle-fill me-2"></i>Order Completed
+            </h2>
+            <p class="text-muted mb-0">
+                Thank you for your purchase! Your order has been placed successfully.
+            </p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4 text-center">
+                        <h4 class="fw-semibold mb-3">
+                            Your order is being processed 🎉
+                        </h4>
+
+                        <p class="text-muted mb-4">
+                            We’ve received your order and our team is already preparing it for shipment.
+                            You’ll receive a confirmation email with the order details shortly.
+                        </p>
+
+                        <hr>
+
+                        <p class="small text-muted mb-3">
+                            Need help? Feel free to reach out to our support team or follow us on social media
+                            to stay updated on upcoming releases and events.
+                        </p>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="{% url 'products:products' %}"
+                               class="btn btn-primary px-4">
+                                Continue Shopping
+                            </a>
+
+                            <a href="#" class="btn btn-outline-secondary px-4">
+                                View Order Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

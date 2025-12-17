@@ -13,6 +13,7 @@ urlpatterns = [
     path('', include('categories.urls')),
     path('', include('django.contrib.auth.urls')),
     path('', include('carts.urls')),
+    path('', include('orders.urls')),
 ]
 
 

@@ -79,7 +79,7 @@ header {
     padding-top: calc(var(--navbar-height) + 20px);
 }
 
-#store-page, #prod-det-page, #account-page, #cart-page, #checkout-page {
+#store-page, #prod-det-page, #account-page, #cart-page, #checkout-page, #checkout-page {
     flex: 1 0 auto;
     padding-top: calc(var(--navbar-height) + var(--subheader-height) + 30px);
     padding-left: 10%;

@@ -96,14 +96,14 @@ def cart(request, total=0, quantity=0, cart_items=None):
 def checkout(request, total=0, quantity=0):
     user = request.user
     billing = [
-        ("first_name", user.first_name),
-        ("last_name", user.last_name),
-        ("Address Line 1", ""),
-        ("Address Line 2", ""),
-        ("City", ""),
-        ("Postal Code", ""),
-        ("Country", ""),
-        ("Phone Number", ""),
+        ("first_name", "First Name"),
+        ("last_name", "Last Name"),
+        ("address_line_1", "Address Line 1"),
+        ("address_line_2", "Address Line 2"),
+        ("city", "City"),
+        ("postal_code", "Postal Code"),
+        ("country", "Country"),
+        ("phone", "Phone Number"),
     ]
 
     grand_total = 0
