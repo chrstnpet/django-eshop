@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.cache import cache
 import requests
+from orders.models import Order, OrderProduct
 
 # ---------------------------------------------------------------------------------------------
 # Helper function to get client IP address
@@ -204,8 +205,15 @@ def account(request):
             "id": "changePassword",
             "heading": "Password Reset",
             "button_name": "update_password",
+        },
+        {
+            "id": "orderHistory",
+            "heading": "Order History",
         }
     ]
+
+    orders = Order.objects.order_by('created_at').filter(user_id=request.user.id, is_ordered=True)
+    orders_count = orders.count()
 
     context = {
         'user': user,
@@ -213,6 +221,17 @@ def account(request):
         'information': information,
         'accordion_sections': accordion_sections,
         'show_secondary_header': True,
+        'orders_count': orders_count,
+        'orders': orders,
     }
 
     return render(request, 'loginreg/account.html', context)
+
+@login_required(login_url='loginreg:loginreg')
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
+    context = {
+        "orders": orders,
+    }
+
+    return render(request, 'account/my_orders.html', context)

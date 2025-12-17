@@ -1,0 +1,81 @@
+<div class="container my-5 d-flex justify-content-center">
+    <div class="col-md-10">
+        <table class="table table-hover table-bordered shadow-sm rounded">
+            <thead class="table-light">
+                <tr>
+                    <th>Order</th>
+                    <th>Billing Name</th>
+                    <th>Phone</th>
+                    <th>Order Total</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <!-- Table row triggers the accordion -->
+                <tr data-bs-toggle="collapse" data-bs-target="#details{{ order.id }}" aria-expanded="false" style="cursor: pointer;">
+                    <td>{{ order.order_number }}</td>
+                    <td>{{ order.first_name }} {{ order.last_name }}</td>
+                    <td>{{ order.phone }}</td>
+                    <td>${{ order.order_total }}</td>
+                    <td>{{ order.created_at|date:"d M Y H:i" }}</td>
+                </tr>
+
+                <!-- Collapsible row with full invoice -->
+                <tr class="collapse" id="details{{ order.id }}">
+                    <td colspan="5" class="p-0">
+                        <div class="card shadow-sm my-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <h6 class="fw-bold text-secondary">Invoiced To:</h6>
+                                        <p>{{ order.first_name }} {{ order.last_name }}</p>
+                                        <p>{{ order.address_line_1 }} {{ order.address_line_2 }}</p>
+                                        <p>{{ order.city }}, {{ order.postal_code }}</p>
+                                        <p>{{ order.country }}</p>
+                                    </div>
+                                    <div class="col-md-6 text-md-end">
+                                        <h6 class="fw-bold text-secondary">Order Info:</h6>
+                                        <p><strong>Order #:</strong> {{ order.order_number }}</p>
+                                        <p><strong>Date:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
+                                        <p><strong>Status:</strong> {{ order.status }}</p>
+                                    </div>
+                                </div>
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-sm table-bordered align-middle">
+                                        <thead class="table-light text-center">
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Qty</th>
+                                                <th>Item Price</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in order.items.all %}
+                                            <tr class="text-center">
+                                                <td class="text-start">{{ item.product_variant }}</td>
+                                                <td>{{ item.quantity }}</td>
+                                                <td>${{ item.price }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="2" class="text-end">Sub Total:</th>
+                                                <th class="text-center">${{ order.order_total }}</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <span class="badge bg-success rounded-pill py-2 px-3">Thank you for shopping with us!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

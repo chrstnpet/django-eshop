@@ -61,11 +61,40 @@
                                         Update Password
                                     </button>
                                 </form>
+
+                            {% elif section.id == "orderHistory" %}
+                                <article class="card">
+                                    <div class="card-header">
+                                        <strong class="d-inline-block mr-3">Logged in as:</strong>
+                                        <span>{{ user.username }}</span>
+                                    </div>
+                                    <div class="card-body">
+                                       <div class="row justify-content-center">
+                                            <div class="col-md-5 mb-3">
+                                                <div class="card text-center">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Total Orders:</h5>
+                                                        <h4>{{ orders_count }}</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5 mb-3">
+                                                <div class="card text-center">
+                                                    <div class="card-body">
+                                                        <p><b>{{ user.first_name }} {{ user.last_name }}</b></p>
+                                                        <p>Email: {{ user.email }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% include 'loginreg/my_orders.html' with orders=orders %}
+                                </article>
                             {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
-</div>
 {% endblock %}
