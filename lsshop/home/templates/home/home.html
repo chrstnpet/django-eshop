@@ -1,60 +1,80 @@
 {% extends 'layout.html' %}
 {% load static %}
 
-{% block title%}Home{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
-    <div id="home-page">
-        <div class="banner">
-            <img src="{% static 'images/banner.jpg' %}" style="width:100%;">
+<div id="home-page">
+    <div class="banner mb-5">
+        <img src="{% static 'images/banner.jpg' %}" class="img-fluid rounded" alt="Banner">
+    </div>
+
+    <div class="container mt-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-title fw-bold">Popular Products</h2>
+            <a href="{% url 'products:products' %}" class="btn btn-outline-primary">See all</a>
         </div>
 
-        <div class="container mt-4">
-
-            <div class="section-heading d-flex align-center gap-2">
-                <h1 class="section-title fs-3">Popular products</h1>
-                <a href="{% url 'products:products' %}" class="btn btn-outline-primary float-right">See all</a>
+        <div class="row g-4">
+            {% comment %} Product Card {% endcomment %}
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card h-100 shadow-sm border-0 product-card">
+                    <a href="{% url 'products:product_detail' 'apparel' 'shirt-design-1' %}" class="img-wrap d-block position-relative overflow-hidden">
+                        <img src="{{ MEDIA_URL }}/products/S1Bfront.png" class="card-img-top img-fluid transition-scale" alt="Shirt Design 1">
+                        <span class="badge bg-success position-absolute top-0 start-0 m-2">Hot</span>
+                    </a>
+                    <div class="card-body text-center">
+                        <a href="{% url 'products:product_detail' 'apparel' 'shirt-design-1' %}" class="card-title h6 text-decoration-none text-dark d-block mb-2">Shirt Design 1</a>
+                        <p class="fw-bold text-primary mb-2">$15.00</p>
+                        <a href="#" class="btn btn-sm btn-outline-primary">Add to Cart</a>
+                    </div>
+                </div>
             </div>
 
-            <div class="row mt-4">
-                <div class="col-lg-3 col-md-6 col-sm-6 mt-2">
-                    <div class="card card-product-grid">
-                        <a href="#" class="img-wrap"> <img src="" width="300"> </a>
-                        <figcaption class="info-wrap">
-                            <a href="#" class="title">Hoodie Design 1</a>
-                            <div class="price mt-1">$25.00</div>
-                        </figcaption>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card h-100 shadow-sm border-0 product-card">
+                    <a href="{% url 'products:product_detail' 'apparel' 'hoodie-design-2' %}" class="img-wrap d-block position-relative overflow-hidden">
+                        <img src="{{ MEDIA_URL }}/products/H2Wfront.png" class="card-img-top img-fluid transition-scale" alt="Hoodie Design 2">
+                        <span class="badge bg-success position-absolute top-0 start-0 m-2">Hot</span>
+                    </a>
+                    <div class="card-body text-center">
+                        <a href="{% url 'products:product_detail' 'apparel' 'hoodie-design-2' %}" class="card-title h6 text-decoration-none text-dark d-block mb-2">Hoodie Design 2</a>
+                        <p class="fw-bold text-primary mb-2">$25.00</p>
+                        <a href="{% url 'products:product_detail' 'apparel' 'hoodie-design-2' %}" class="btn btn-sm btn-outline-primary">View Details</a>
                     </div>
-                </div> <!-- col.// -->
-                <div class="col-lg-3 col-md-6 col-sm-6 mt-2">
-                    <div class="card card-product-grid">
-                        <a href="#" class="img-wrap"> <img src="" width="300"> </a>
-                        <figcaption class="info-wrap">
-                            <a href="#" class="title">Shirt Design 1</a>
-                            <div class="price mt-1">$15.00</div>
-                        </figcaption>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card h-100 shadow-sm border-0 product-card">
+                    <a href="{% url 'products:product_detail' 'stationary' 'pen' %}" class="img-wrap d-block position-relative overflow-hidden">
+                        <img src="{{ MEDIA_URL }}/products/Pen_B.png" class="card-img-top img-fluid transition-scale" alt="Pen Black">
+                        <span class="badge bg-success position-absolute top-0 start-0 m-2">Hot</span>
+                    </a>
+                    <div class="card-body text-center">
+                        <a href="{% url 'products:product_detail' 'stationary' 'pen' %}" class="card-title h6 text-decoration-none text-dark d-block mb-2">Pen Black</a>
+                        <p class="fw-bold text-primary mb-2">$3.00</p>
+                        <a href="{% url 'products:product_detail' 'stationary' 'pen' %}" class="btn btn-sm btn-outline-primary">View Details</a>
                     </div>
-                </div> <!-- col.// -->
-                <div class="col-lg-3 col-md-6 col-sm-6 mt-2">
-                    <div class="card card-product-grid">
-                        <a href="#" class="img-wrap"> <img src="" width="300"> </a>
-                        <figcaption class="info-wrap">
-                            <a href="#" class="title">Keychain Design 2</a>
-                            <div class="price mt-1">$2.00</div>
-                        </figcaption>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card h-100 shadow-sm border-0 product-card">
+                    <a href="{% url 'products:product_detail' 'stationary' 'sticker-1' %}" class="img-wrap d-block position-relative overflow-hidden">
+                        <img src="{{ MEDIA_URL }}/products/Sticker1.png" class="card-img-top img-fluid transition-scale" alt="Sticker 1">
+                        <span class="badge bg-success position-absolute top-0 start-0 m-2">Hot</span>
+                    </a>
+                    <div class="card-body text-center">
+                        <a href="{% url 'products:product_detail' 'stationary' 'sticker-1' %}" class="card-title h6 text-decoration-none text-dark d-block mb-2">Lounge Logo Sticker 1</a>
+                        <p class="fw-bold text-primary mb-2">$1.00</p>
+                        <a href="{% url 'products:product_detail' 'stationary' 'sticker-1' %}" class="btn btn-sm btn-outline-primary">View Details</a>
                     </div>
-                </div> <!-- col.// -->
-                <div class="col-lg-3 col-md-6 col-sm-6 mt-2">
-                    <div class="card card-product-grid">
-                        <a href="#" class="img-wrap"> <img src="" width="300"> </a>
-                        <figcaption class="info-wrap">
-                            <a href="#" class="title">Lounge Logo Sticker</a>
-                            <div class="price mt-1">$1.00</div>
-                        </figcaption>
-                    </div>
-                </div> <!-- col.// -->
-            </div> <!-- row.// -->
-            
-        </div><!-- container // -->
-    </div>
+                </div>
+            </div>
+        </div><!-- row -->
+    </div><!-- container -->
+</div>
+
 {% endblock %}
