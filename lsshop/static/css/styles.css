@@ -228,6 +228,10 @@ header {
     }
 }
 
+#rate {
+    display: none;
+}
+
 /*------------ Footer -------------*/
 .footer-contents {
     flex-shrink: 0;
