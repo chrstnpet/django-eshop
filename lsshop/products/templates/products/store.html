@@ -143,13 +143,13 @@
                                                                 </button>
                                                             </form>
                                                         {% else %}
-                                                            <a href="{% url 'loginreg:loginreg' %}" class="btn btn-light btn-outline-secondary mt-2">
+                                                            <a href="{% url 'loginreg:loginreg' %}" class="btn btn-light btn-outline-secondary align-self-start mt-2">
                                                                 <i class="bi bi-suit-heart"></i>
                                                             </a>
                                                         {% endif %}
 
                                                         <div class="img-wrap text-center">
-                                                            <img src="{{ first_color.front_image.url }}" class="img-fluid product-figure" style="max-height:250px;">
+                                                            <a href="{{ product.get_url }}"><img src="{{ first_color.front_image.url }}" class="img-fluid product-figure" style="max-height:250px;"></a>
                                                         </div>
                                                         <figcaption class="info-wrap">
                                                             <div class="fix-height">
