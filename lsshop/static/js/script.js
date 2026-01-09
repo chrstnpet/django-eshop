@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const imageElement = document.getElementById("main-product-image");
+    const imageElement = document.querySelector("main-product-image");
     const colors = document.querySelectorAll("input[name='color']");
     const sizeGroups = document.querySelectorAll(".size-group");
 
@@ -54,8 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ----------------------------
     // Add to Cart form
-    const addToCartForm = document.getElementById("add-to-cart-form");
-    const selectedSizeInput = document.getElementById("selected-size-variant");
+    const addToCartForm = document.querySelector("add-to-cart-form");
+    const selectedSizeInput = document.querySelector("selected-size-variant");
 
     if (addToCartForm) {
         addToCartForm.addEventListener("submit", function (e) {
